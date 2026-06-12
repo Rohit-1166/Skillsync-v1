@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Caches and search indexes (keep cache dir structure but ignore binary content)
+cache/*
+!cache/.gitkeep
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# Scratch scripts (keeps development scripts local and private)
+scratch/
+
+# Large candidate database (prevents Git push crashes as file is > 400MB)
+data/candidates.jsonl
+
+# Team interview prep sheets & history automation guides (must remain private)
+PREPARATION_README.md
+docs/PREPARATION_GUIDE.md
+
+# Output and temporary diagnostic logs
+logs/
+*.log
+debug_submission.csv
+
+# IDE settings
+.vscode/
+.idea/
