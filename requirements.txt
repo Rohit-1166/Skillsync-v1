@@ -1,0 +1,21 @@
+# SkillSync — Python Dependencies
+
+# 1. Core NLP & Vector Search (Offline Inference)
+sentence-transformers==5.5.1
+faiss-cpu==1.14.3
+numpy==2.1.1
+pymupdf==1.27.2.3
+
+# 2. API matching endpoints
+fastapi==0.137.1
+uvicorn==0.49.0
+python-multipart==0.0.32
+
+# 3. Data Analysis & Profiling
+pandas==3.0.3
+scikit-learn==1.9.0
+
+# 4. Utilities & Support (transitive/helper packages)
+tqdm==4.68.2
+pyyaml==6.0.3
+python-dotenv==1.2.2
