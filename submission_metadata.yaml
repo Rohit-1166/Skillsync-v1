@@ -1,0 +1,76 @@
+# Redrob Hackathon — Submission Metadata
+#
+# Copied and completed from Check/submission_metadata_template.yaml
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "Rohit-1166"
+
+primary_contact:
+  name: "Rohit"
+  email: "rohit@example.com"
+  phone: "+91-9999999999"
+
+team_members:
+  - name: "arjunkumar24b"
+    email: "arjun.kumar24b@iiitg.ac.in"
+    role: "Systems & Backend Architect"
+  - name: "Rohit Kumar"
+    email: "rohit.kumar24b@iiitg.ac.in"
+    role: "Data & Vector Infrastructure Engineer"
+  - name: "SOMYA870"
+    email: "somyapatel1562004@gmail.com"
+    role: "Business Logic & Analytics Engineer"
+  - name: "SameerMurmu029"
+    email: "sameermurmu29@gmail.com"
+    role: "QA & Technical Documentation Engineer"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/Rohit-1166/Skillsync-v1"
+
+sandbox_link: "https://huggingface.co/spaces/Rohit-1166/redrob-ranker"
+
+reproduce_command: "python main.py"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Windows Local Machine"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.11.4"
+  os: "Windows 11"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: true
+  pre_computation_time_minutes: 40
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+ai_tools_used:
+  - "Claude"
+  - "Cursor"
+
+ai_usage_summary: |
+  Used Claude for architecture design, debugging python errors, and structuring the candidate explainability report. No candidate data was sent to any LLM.
+
+# ============================================================================
+# Approach summary (optional but recommended)
+# ============================================================================
+methodology_summary: |
+  A hybrid matching system combining FAISS semantic search (using cached BGE-small embeddings) with 20 recruiter-inspired feature scores (experience stability, skill matching, capability alignment, education quality, platform engagement, and notice periods). Fictional and impossible honeypot profiles are dynamically filtered, and tie-breaks are resolved alphabetically by candidate ID. Matching executes in under 1 second on CPU.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
