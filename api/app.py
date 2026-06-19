@@ -1,5 +1,7 @@
 import os
-# Force Hugging Face Hub to run in offline mode using local cache
+
+# Force Hugging Face to use only locally cached models.
+# Prevents model downloads during evaluation or deployment.
 os.environ["HF_HUB_OFFLINE"] = "1"
 
 import shutil
@@ -20,7 +22,8 @@ from reasoning.explanation_generator import ExplanationGenerator
 from utils.document_reader import DocumentReader
 from utils.logger import logger
 
-# Global pipeline and ranker references
+# These objects are loaded once during startup and reused across requests.
+# This avoids repeatedly loading large embedding models and FAISS indexes.
 pipeline = None
 ranker = None
 candidates = None
@@ -28,31 +31,50 @@ candidate_map = None
 default_jd = None
 current_jd = None
 
+# FastAPI lifespan runs once at startup and shutdown.
+# Heavy resources are initialized here so API requests remain fast.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global pipeline, ranker, candidates, candidate_map, default_jd
+
     logger.info("Initializing SkillSync matching service...")
+
     try:
-        # Load embedding pipeline (retrieves cache and candidates)
+        # Load candidate embeddings and FAISS index from cache.
         pipeline = EmbeddingPipeline()
         faiss_index, candidates = pipeline.run()
-        
-        # Instantiate ranker
+
+        # Ranker combines semantic retrieval with feature-based scoring.
         ranker = HybridRanker(pipeline.embedder, faiss_index)
+
+        # O(1) candidate lookup by ID instead of scanning the full list.
         candidate_map = {c.candidate_id: c for c in candidates}
-        
-        # Load default Job Description
+
+        # Load a fallback Job Description that can be used
+        # when no JD has been uploaded in the current session.
         if Path(JD_FILE).exists():
             jd_text = DocumentReader.read(JD_FILE)
             default_jd = JDParser(jd_text).parse()
-            logger.info(f"Loaded default Job Description: '{default_jd.title}'")
+
+            logger.info(
+                f"Loaded default Job Description: '{default_jd.title}'"
+            )
         else:
-            logger.warning(f"Default Job Description file '{JD_FILE}' not found.")
-            
-        logger.info("SkillSync matching service successfully loaded cache and index.")
+            logger.warning(
+                f"Default Job Description file '{JD_FILE}' not found."
+            )
+
+        logger.info(
+            "SkillSync matching service successfully loaded cache and index."
+        )
+
     except Exception as e:
-        logger.error(f"Failed to initialize SkillSync matching service: {e}")
+        logger.error(
+            f"Failed to initialize SkillSync matching service: {e}"
+        )
+
     yield
+
     logger.info("Shutting down SkillSync matching service...")
 
 app = FastAPI(
@@ -62,6 +84,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Request model for ranking candidates from raw JD text.
 class RankTextRequest(BaseModel):
     jd_text: str
     top_k: int = 100
@@ -69,34 +92,75 @@ class RankTextRequest(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 def read_root():
     static_file = Path(__file__).parent / "static" / "index.html"
+
     if static_file.exists():
-        return HTMLResponse(content=static_file.read_text(encoding="utf-8"))
-    return HTMLResponse(content="<h1>SkillSync Dashboard File Not Found</h1>", status_code=404)
+        return HTMLResponse(
+            content=static_file.read_text(encoding="utf-8")
+        )
+
+    return HTMLResponse(
+        content="<h1>SkillSync Dashboard File Not Found</h1>",
+        status_code=404
+    )
 
 @app.get("/health")
 def health_check():
+
+    # If startup initialization failed, report service unavailable.
     if pipeline is None or ranker is None or candidates is None:
-        raise HTTPException(status_code=503, detail="Matching engine is not initialized.")
+        raise HTTPException(
+            status_code=503,
+            detail="Matching engine is not initialized."
+        )
+
     return {
         "status": "healthy",
-        "model": pipeline.embedder.model.active_folding_model_name if hasattr(pipeline.embedder.model, "active_folding_model_name") else "BAAI/bge-small-en-v1.5",
+
+        # Fallback model name is returned when the wrapper model
+        # does not expose active_folding_model_name.
+        "model": pipeline.embedder.model.active_folding_model_name
+        if hasattr(
+            pipeline.embedder.model,
+            "active_folding_model_name"
+        )
+        else "BAAI/bge-small-en-v1.5",
+
         "total_candidates": len(candidates),
         "cache_loaded": True
     }
 
 @app.post("/rank/text")
 def rank_candidates_by_text(request: RankTextRequest):
+
     if ranker is None or candidates is None:
-        raise HTTPException(status_code=503, detail="Matching engine is not initialized.")
-    
+        raise HTTPException(
+            status_code=503,
+            detail="Matching engine is not initialized."
+        )
+
     global current_jd
+
     try:
         jd = JDParser(request.jd_text).parse()
+
+        # Store the latest JD so explanation endpoints
+        # can reference the same ranking context.
         current_jd = jd
-        ranked = ranker.rank(candidates, jd, top_k_retrieval=500)
-        
+
+        # Retrieve a larger candidate pool before reranking.
+        # This improves recall and usually produces better matches.
+        ranked = ranker.rank(
+            candidates,
+            jd,
+            top_k_retrieval=500
+        )
+
         results = []
-        for rank_idx, (candidate, features) in enumerate(ranked[:request.top_k], start=1):
+
+        for rank_idx, (candidate, features) in enumerate(
+            ranked[:request.top_k],
+            start=1
+        ):
             results.append({
                 "rank": rank_idx,
                 "candidate_id": candidate.candidate_id,
@@ -106,41 +170,70 @@ def rank_candidates_by_text(request: RankTextRequest):
                 "current_title": candidate.profile.current_title,
                 "current_company": candidate.profile.current_company
             })
-        return {"total_results": len(results), "candidates": results}
+
+        return {
+            "total_results": len(results),
+            "candidates": results
+        }
+
     except Exception as e:
         logger.error(f"Error ranking by text: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/rank/pdf")
-async def rank_candidates_by_pdf(file: UploadFile = File(...), top_k: int = Form(100)):
+async def rank_candidates_by_pdf(
+    file: UploadFile = File(...),
+    top_k: int = Form(100)
+):
+
     if ranker is None or candidates is None:
-        raise HTTPException(status_code=503, detail="Matching engine is not initialized.")
-    
+        raise HTTPException(
+            status_code=503,
+            detail="Matching engine is not initialized."
+        )
+
     if not file.filename.lower().endswith(".pdf"):
-        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
-        
+        raise HTTPException(
+            status_code=400,
+            detail="Only PDF files are supported."
+        )
+
     try:
         global current_jd
-        # Save uploaded PDF to temporary file
+
+        # Uploaded PDFs are temporarily stored on disk because
+        # the document reader expects a file path as input.
         temp_dir = Path("cache") / "temp"
         temp_dir.mkdir(exist_ok=True)
+
         temp_file_path = temp_dir / file.filename
-        
+
         with temp_file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-            
-        # Extract text and parse
+
+        # Extract text from the uploaded JD and convert it
+        # into the structured format used by the ranking pipeline.
         jd_text = DocumentReader.read(temp_file_path)
         jd = JDParser(jd_text).parse()
+
         current_jd = jd
-        
-        # Remove temp file
+
+        # Remove temporary file after successful extraction
+        # to avoid unnecessary disk usage.
         os.remove(temp_file_path)
-        
-        ranked = ranker.rank(candidates, jd, top_k_retrieval=500)
-        
+
+        ranked = ranker.rank(
+            candidates,
+            jd,
+            top_k_retrieval=500
+        )
+
         results = []
-        for rank_idx, (candidate, features) in enumerate(ranked[:top_k], start=1):
+
+        for rank_idx, (candidate, features) in enumerate(
+            ranked[:top_k],
+            start=1
+        ):
             results.append({
                 "rank": rank_idx,
                 "candidate_id": candidate.candidate_id,
@@ -150,55 +243,107 @@ async def rank_candidates_by_pdf(file: UploadFile = File(...), top_k: int = Form
                 "current_title": candidate.profile.current_title,
                 "current_company": candidate.profile.current_company
             })
-        return {"total_results": len(results), "candidates": results}
+
+        return {
+            "total_results": len(results),
+            "candidates": results
+        }
+
     except Exception as e:
         logger.error(f"Error ranking by PDF: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/candidate/{candidate_id}/explain")
-def explain_candidate(candidate_id: str, format: str = Query("json", pattern="^(json|markdown)$")):
+def explain_candidate(
+    candidate_id: str,
+    format: str = Query("json", pattern="^(json|markdown)$")
+):
     global current_jd
+
     if ranker is None or candidates is None or candidate_map is None:
-        raise HTTPException(status_code=503, detail="Matching engine is not initialized.")
-        
+        raise HTTPException(
+            status_code=503,
+            detail="Matching engine is not initialized."
+        )
+
+    # O(1) lookup using the precomputed candidate map.
     candidate = candidate_map.get(candidate_id)
+
     if not candidate:
-        raise HTTPException(status_code=404, detail=f"Candidate {candidate_id} not found.")
-        
+        raise HTTPException(
+            status_code=404,
+            detail=f"Candidate {candidate_id} not found."
+        )
+
+    # Use the most recently ranked JD.
+    # If no ranking request has been made, fall back to the default JD.
     active_jd = current_jd if current_jd is not None else default_jd
+
     if active_jd is None:
-        raise HTTPException(status_code=500, detail="Job description not loaded.")
-        
+        raise HTTPException(
+            status_code=500,
+            detail="Job description not loaded."
+        )
+
     try:
-        # Compute features against active job description
-        features = ranker.feature_engineer.extract(candidate, active_jd)
-        
-        # Compute mock/real semantic similarity score
+        # Recompute features against the active JD so the explanation
+        # reflects the same scoring context used during ranking.
+        features = ranker.feature_engineer.extract(
+            candidate,
+            active_jd
+        )
+
+        # Convert the JD into the semantic document format
+        # expected by the embedding model.
         jd_doc = ranker._build_jd_document(active_jd)
+
         jd_embedding = ranker.embedder.encode(jd_doc)
-        cand_doc = ExplanationGenerator._extract_evidence(candidate, active_jd)
+
+        cand_doc = ExplanationGenerator._extract_evidence(
+            candidate,
+            active_jd
+        )
+
         from embeddings.semantic_document_builder import SemanticDocumentBuilder
+
+        # Build a unified candidate document containing
+        # experience, skills, education and profile signals.
         cand_doc_str = SemanticDocumentBuilder.build(candidate)
+
         cand_embedding = ranker.embedder.encode(cand_doc_str)
+
         import numpy as np
-        similarity = float(np.dot(jd_embedding, cand_embedding))
-        
-        # Calculate hybrid score
-        hybrid_score = 0.60 * similarity + 0.40 * features.final_score
+
+        # Measure semantic alignment between JD and candidate profile.
+        similarity = float(
+            np.dot(jd_embedding, cand_embedding)
+        )
+
+        # Final score combines semantic relevance with
+        # feature-engineered hiring signals.
+        hybrid_score = (
+            0.60 * similarity
+            + 0.40 * features.final_score
+        )
+
         features.final_score = hybrid_score
         features.similarity_score = similarity
-        
+
         report = ExplanationGenerator.generate(
             candidate=candidate,
             similarity=similarity,
             features=features,
             jd=active_jd
         )
-        
+
+        # Markdown output is useful for reports,
+        # exports and frontend rendering.
         if format == "markdown":
             return PlainTextResponse(report)
-            
-        # Build serializable candidate details dictionary
+
+        # Convert complex objects into JSON-safe dictionaries
+        # before returning them through the API.
         details = {
             "headline": candidate.profile.headline,
             "summary": candidate.profile.summary,
@@ -208,13 +353,16 @@ def explain_candidate(candidate_id: str, format: str = Query("json", pattern="^(
             "current_title": candidate.profile.current_title,
             "current_company": candidate.profile.current_company,
             "current_industry": candidate.profile.current_industry,
+
             "skills": [
                 {
                     "name": s.name,
                     "proficiency": s.proficiency,
                     "duration_months": s.duration_months
-                } for s in candidate.skills
+                }
+                for s in candidate.skills
             ],
+
             "education": [
                 {
                     "institution": e.institution,
@@ -223,8 +371,10 @@ def explain_candidate(candidate_id: str, format: str = Query("json", pattern="^(
                     "start_year": e.start_year,
                     "end_year": e.end_year,
                     "grade": e.grade
-                } for e in candidate.education
+                }
+                for e in candidate.education
             ],
+
             "career_history": [
                 {
                     "company": c.company,
@@ -233,24 +383,38 @@ def explain_candidate(candidate_id: str, format: str = Query("json", pattern="^(
                     "description": c.description,
                     "start_date": c.start_date,
                     "end_date": c.end_date
-                } for c in candidate.career_history
+                }
+                for c in candidate.career_history
             ],
+
             "signals": {
                 "notice_period_days": candidate.signals.notice_period_days,
                 "preferred_work_mode": candidate.signals.preferred_work_mode,
                 "willing_to_relocate": candidate.signals.willing_to_relocate,
-                "profile_completeness_score": candidate.signals.profile_completeness_score
+                "profile_completeness_score":
+                    candidate.signals.profile_completeness_score
             }
         }
-        
+
         return {
             "candidate_id": candidate_id,
             "final_hybrid_score": round(hybrid_score, 4),
             "semantic_similarity_score": round(similarity, 4),
-            "recommendation_level": "🟢 STRONG MATCH" if hybrid_score >= 0.70 else "🔵 GOOD MATCH" if hybrid_score >= 0.60 else "🟡 MARGINAL MATCH" if hybrid_score >= 0.50 else "🔴 UNALIGNED",
+
+            # Human-readable recommendation derived from the final score.
+            "recommendation_level":
+                "STRONG MATCH" if hybrid_score >= 0.70
+                else "GOOD MATCH" if hybrid_score >= 0.60
+                else "MARGINAL MATCH" if hybrid_score >= 0.50
+                else "UNALIGNED",
+
             "report_markdown": report,
             "candidate_details": details
         }
+
     except Exception as e:
         logger.error(f"Error generating explanation: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )

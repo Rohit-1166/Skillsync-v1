@@ -1,10 +1,13 @@
 import os
-# Disable fast tokenizer parallelism to avoid OMP thread thrashing with PyTorch
+
+# Disables tokenizer multithreading to prevent excessive CPU contention
+# when SentenceTransformers and PyTorch are processing large batches.
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import time
 from pathlib import Path
 import numpy as np  # pyright: ignore[reportMissingImports]
+
 from config.settings import CANDIDATE_FILE, EMBEDDING_MODEL
 from parser.candidate_parser import CandidateParser
 from embeddings.semantic_document_builder import SemanticDocumentBuilder
@@ -25,22 +28,15 @@ class EmbeddingPipeline:
         self.candidate_file = CANDIDATE_FILE
 
     def run(self) -> tuple[FaissIndex, list]:
-        """
-        Executes the embedding pipeline.
-        Parses candidates, loads cached embeddings/FAISS index if valid,
-        or generates them in memory-safe chunks and saves them to cache.
-
-        Returns:
-            tuple[FaissIndex, list[Candidate]]: The FAISS index and the list of candidate objects.
-        """
 
         logger.info("Initializing embedding pipeline...")
 
-        # Parse candidates
         parser = CandidateParser(self.candidate_file)
 
         candidates = parser.parse()
 
+        # Reuse previously generated embeddings and FAISS index
+        # to avoid rebuilding them on every application startup.
         if self._is_cache_valid():
 
             logger.info("Loading embeddings and FAISS index from cache...")
@@ -63,7 +59,6 @@ class EmbeddingPipeline:
 
                 logger.warning(f"Failed to load cache: {e}. Rebuilding index...")
 
-        # Cache is invalid or failed to load, rebuild it
         logger.info("Generating candidate embeddings (cache not found or empty)...")
 
         start_time = time.time()
@@ -76,6 +71,8 @@ class EmbeddingPipeline:
 
             documents.append(doc)
 
+        # Large candidate datasets can exceed available RAM if encoded
+        # in a single batch, so embeddings are generated in chunks.
         logger.info("Encoding documents in chunks of 10,000 to prevent RAM swapping...")
 
         chunk_size = 10000
@@ -110,6 +107,8 @@ class EmbeddingPipeline:
 
         logger.info("Aggregating embeddings...")
 
+        # Merge all chunk embeddings into a single matrix
+        # before building the FAISS index.
         embeddings = np.vstack(embeddings_list)
 
         logger.info("Building FAISS index...")
@@ -122,6 +121,8 @@ class EmbeddingPipeline:
 
         logger.info("Saving generated embeddings and FAISS index to cache...")
 
+        # Metadata helps verify cache compatibility between runs
+        # and simplifies debugging when models or datasets change.
         metadata = {
             "embedding_model": EMBEDDING_MODEL,
             "embedding_dimension": self.embedder.dimension,
@@ -144,15 +145,12 @@ class EmbeddingPipeline:
         return faiss_index, candidates
 
     def _is_cache_valid(self) -> bool:
-        """
-        Validates that the cache files exist and have non-zero size.
-        """
 
         if not self.cache_manager.cache_exists():
 
             return False
 
-        # Ensure none of the files are empty (0-byte placeholders)
+        # Prevent loading partially written or corrupted cache files.
         cache_files = [
             self.cache_manager.embedding_file,
             self.cache_manager.id_file,

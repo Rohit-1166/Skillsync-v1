@@ -20,6 +20,8 @@ CAPABILITY_MAP = {
             "dense retrieval"
         ],
 
+        # Technologies and tools that provide evidence
+        # of retrieval and search-related experience.
         "evidence": [
             "faiss",
             "milvus",
@@ -39,6 +41,8 @@ CAPABILITY_MAP = {
             "embeddings"
         ],
 
+        # Common embedding models and frameworks that
+        # indicate experience with vector representations.
         "evidence": [
             "sentence transformers",
             "bge",
@@ -56,6 +60,8 @@ CAPABILITY_MAP = {
             "learning to rank"
         ],
 
+        # Keywords associated with ranking systems
+        # and relevance optimization.
         "evidence": [
             "recommendation",
             "recommender",
@@ -73,6 +79,8 @@ CAPABILITY_MAP = {
             "foundation model"
         ],
 
+        # Terms commonly found in modern LLM
+        # and Generative AI workflows.
         "evidence": [
             "rag",
             "langchain",
@@ -93,6 +101,8 @@ CAPABILITY_MAP = {
             "backend engineering"
         ],
 
+        # Backend technologies used as indicators
+        # of server-side engineering experience.
         "evidence": [
             "python",
             "fastapi",
@@ -107,7 +117,10 @@ CAPABILITY_MAP = {
 }
 
 def get_all_capabilities() -> list[str]:
+    # Returns all supported capability categories
+    # available in the knowledge base.
     return list(CAPABILITY_MAP.keys())
 
 def get_capability(capability: str) -> dict:
+    # Case-insensitive lookup of capability metadata.
     return CAPABILITY_MAP.get(capability.lower(), {})

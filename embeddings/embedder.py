@@ -7,6 +7,8 @@ class Embedder:
 
     def __init__(self):
 
+        # Load the embedding model once during initialization
+        # so it can be reused for all encoding requests.
         self.model = SentenceTransformer(
             EMBEDDING_MODEL
         )
@@ -15,6 +17,9 @@ class Embedder:
 
         return self.model.encode(
             text,
+
+            # Normalized embeddings allow cosine similarity
+            # to be computed efficiently using dot product.
             normalize_embeddings=True
         )
 
@@ -25,7 +30,8 @@ class Embedder:
         max_length=256
     ):
 
-        # Configure max sequence length directly on the model for SentenceTransformer v3
+        # Limit token length to control memory usage and
+        # maintain consistent embedding generation.
         self.model.max_seq_length = max_length
 
         return self.model.encode(
@@ -38,4 +44,6 @@ class Embedder:
     @property
     def dimension(self):
 
+        # Exposes embedding size without requiring callers
+        # to access the underlying model directly.
         return self.model.get_sentence_embedding_dimension()

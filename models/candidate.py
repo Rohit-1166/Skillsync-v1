@@ -3,6 +3,7 @@ from typing import List, Optional
 
 @dataclass
 class Profile:
+    # Core profile information extracted from the candidate record.
     headline: str
     summary: str
     location: str
@@ -14,6 +15,7 @@ class Profile:
 
 @dataclass
 class CareerEntry:
+    # Represents a single employment record in the candidate's career history.
     company: str
     title: str
     description: str
@@ -21,11 +23,15 @@ class CareerEntry:
     industry: str
     company_size: str
     is_current: bool
+
+    # Optional dates are retained when available but are not
+    # required by the current ranking pipeline.
     start_date: Optional[str] = None
     end_date: Optional[str] = None
 
 @dataclass
 class Skill:
+    # Stores skill metadata used for matching and technical depth analysis.
     name: str
     proficiency: str
     endorsements: int
@@ -33,16 +39,23 @@ class Skill:
 
 @dataclass
 class Education:
+    # Educational qualifications used for tier, relevance,
+    # and academic performance scoring.
     institution: str
     degree: str
     field_of_study: str
     tier: str
     grade: str
+
+    # Academic timeline information is optional because
+    # some candidate profiles may not provide it.
     start_year: Optional[int] = None
     end_year: Optional[int] = None
 
 @dataclass
 class RecruiterSignals:
+    # Signals derived from candidate activity, recruiter engagement,
+    # availability, and profile quality.
     profile_completeness_score: float
     signup_date: str
     last_active_date: str
@@ -67,10 +80,16 @@ class RecruiterSignals:
     verified_email: bool
     verified_phone: bool
     linkedin_connected: bool
+
 @dataclass
 class Candidate:
+    # Root candidate object used throughout parsing,
+    # feature engineering, ranking, and explanation generation.
     candidate_id: str
     profile: Profile
+
+    # default_factory prevents all Candidate instances
+    # from sharing the same mutable list object.
     career_history: List[CareerEntry] = field(default_factory=list)
     skills: List[Skill] = field(default_factory=list)
     education: List[Education] = field(default_factory=list)

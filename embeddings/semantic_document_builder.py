@@ -51,6 +51,8 @@ class SemanticDocumentBuilder:
 
         if candidate.skills:
 
+            # Prioritize skills with stronger evidence by considering
+            # endorsements and duration of usage before embedding.
             skills = sorted(
                 candidate.skills,
                 key=lambda s: (
@@ -94,6 +96,8 @@ class SemanticDocumentBuilder:
 
             for job in candidate.career_history:
 
+                # Convert structured career data into readable
+                # recruiter-style sentences for better semantic matching.
                 paragraph = (
 
                     f"The candidate worked as "
@@ -122,6 +126,8 @@ class SemanticDocumentBuilder:
 
         if candidate.education:
 
+            # Assumes the parser keeps the most relevant or highest
+            # qualification at index 0.
             education = candidate.education[0]
 
             lines.append(
@@ -156,6 +162,8 @@ class SemanticDocumentBuilder:
 
                 )
 
+            # Fast availability is often a useful ranking signal
+            # for recruiters and hiring teams.
             if signal.notice_period_days <= 30:
 
                 lines.append(
@@ -174,4 +182,6 @@ class SemanticDocumentBuilder:
 
                 )
 
+        # Join sections with blank lines to create a more natural
+        # document structure for the embedding model.
         return "\n\n".join(lines)
