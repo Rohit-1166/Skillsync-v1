@@ -8,6 +8,10 @@ from knowledge.companies import get_company_tier_score
 from knowledge.capabilities import CAPABILITY_MAP
 
 
+# Generates two types of human-readable output from scoring results:
+# 1. A concise CSV reasoning string for bulk submission exports.
+# 2. A structured markdown report for individual candidate explanation.
+# Acts as the final presentation layer in the SkillSync pipeline.
 class ExplanationGenerator:
 
     @staticmethod
@@ -21,24 +25,28 @@ class ExplanationGenerator:
         """
         title = candidate.profile.current_title or "Engineer"
         exp = candidate.profile.years_of_experience
-        
+
         highlights = []
-        
-        # 1. Company / Education pedigree highlights
+
+        # Company pedigree is the strongest single signal for candidate quality.
+        # Tier-1 company experience is surfaced first when present.
         from knowledge.companies import get_company_tier_score
         tier_1_cos = [job.company for job in candidate.career_history if get_company_tier_score(job.company) == 1.0]
         if tier_1_cos:
             highlights.append(f"ex-{tier_1_cos[0]}")
         elif features.education_tier_score == 1.0:
+            # Fall back to education pedigree when no Tier-1 company history exists.
             highlights.append("Tier-1 education")
-            
-        # 2. Skill depth highlights
+
+        # Technical depth flags indicate specialization beyond keyword matching.
+        # AI depth is prioritized over backend depth as it is more role-specific.
         if features.ai_technical_depth >= 0.7:
             highlights.append("strong AI/NLP depth")
         elif features.backend_technical_depth >= 0.7:
             highlights.append("strong backend depth")
-            
-        # 3. Signals (notice period & response rate)
+
+        # Extract recruiter engagement signals for the summary line.
+        # Handles both list and direct object formats defensively.
         sig = candidate.signals
         response_rate = 0.0
         notice = 30
@@ -46,7 +54,9 @@ class ExplanationGenerator:
             sig_obj = sig[0] if isinstance(sig, list) and sig else sig
             response_rate = sig_obj.recruiter_response_rate
             notice = sig_obj.notice_period_days
-            
+
+        # Fallback highlight ensures the summary is never empty
+        # even when no strong pedigree or depth signals are present.
         highlight_str = "; ".join(highlights) if highlights else "solid engineering fit"
         return f"{title} with {exp:.1f} yrs; {highlight_str}; response rate {response_rate:.2f} with {notice}d notice."
 
@@ -63,7 +73,8 @@ class ExplanationGenerator:
         detailing their overall score, match classification, category breakdowns,
         strengths/concerns, and extracted evidence.
         """
-        # Determine Recommendation Level
+        # Recommendation level thresholds mirror the API response labels
+        # so the markdown report and JSON output stay consistent.
         score = features.final_score
         if score >= 0.70:
             rec_level = "🟢 STRONG MATCH"
@@ -81,12 +92,15 @@ class ExplanationGenerator:
         lines.append(f"- **Semantic Context Similarity**: `{similarity:.4f}`")
         lines.append("")
 
-        # 1. STRENGTHS & CONCERNS
+        # Section 1: Strengths and concerns are derived from feature scores
+        # rather than raw data so the narrative reflects the same signals
+        # used during ranking — keeping scoring and explanation consistent.
         lines.append("### Key Recruiter Signals")
         strengths = []
         concerns = []
 
-        # Experience Evaluation
+        # Experience evaluation checks both total volume and JD fit.
+        # A candidate can have high experience but still miss the JD range.
         exp = candidate.profile.years_of_experience
         if features.experience_years_score >= 0.7:
             strengths.append(f"Extensive overall experience: **{exp:.1f} years** of work history.")
@@ -98,7 +112,8 @@ class ExplanationGenerator:
         elif exp < jd.min_experience:
             concerns.append(f"Experience gap: Candidate has {exp:.1f} years vs the required minimum of {jd.min_experience} years.")
 
-        # Stability Evaluation
+        # Timeline analysis surfaces job hopping risk using actual
+        # career dates rather than relying solely on the feature score.
         stats = TimelineConsistencyAnalyzer.analyze(candidate)
         avg_tenure = stats["average_tenure_months"]
         if features.career_stability_score >= 0.9:
@@ -106,28 +121,35 @@ class ExplanationGenerator:
         elif features.career_stability_score < 0.6:
             concerns.append(f"Job hopping risk: Candidate averages short tenures of **{avg_tenure:.1f} months** per job.")
 
-        # Skill & Depth Evaluation
+        # Skill match percentage translates the raw overlap score
+        # into a recruiter-friendly percentage for the report.
         if features.required_skills_match >= 0.7:
             strengths.append(f"Strong required skills alignment: matches **{features.required_skills_match * 100:.0f}%** of required technical keywords.")
         elif features.required_skills_match < 0.3:
             concerns.append(f"Technical keyword gaps: matches only **{features.required_skills_match * 100:.0f}%** of required skills.")
 
+        # Technical depth scores go beyond keyword presence to reflect
+        # demonstrated proficiency in AI/ML or backend systems.
         if features.ai_technical_depth >= 0.7:
             strengths.append("Demonstrates advanced AI technical depth: significant exposure to modern ML, RAG, and NLP architectures.")
         if features.backend_technical_depth >= 0.7:
             strengths.append("Strong systems and backend depth: experienced in microservices, databases, and deployment pipelines.")
 
-        # Brand Tier Evaluation
+        # Tier-1 company experience is a strong proxy for engineering quality
+        # and is highlighted separately from skill or experience scores.
         tier_1_cos = [job.company for job in candidate.career_history if get_company_tier_score(job.company) == 1.0]
         if tier_1_cos:
             strengths.append(f"Prestige professional pedigree: worked at Tier 1 tech company ({', '.join(set(tier_1_cos[:2]))}).")
 
+        # Education tier distinguishes elite institution graduates
+        # and flags candidates with no academic credentials at all.
         if features.education_tier_score == 1.0:
             strengths.append("Elite academic credentials: Tier 1 educational institution graduate.")
         elif features.education_tier_score == 0.0:
             concerns.append("Academic profile missing: no educational credentials listed.")
 
-        # Logistics Evaluation
+        # Notice period and work mode are logistical signals that can
+        # block a hire even when all technical signals are strong.
         if candidate.signals:
             sig = candidate.signals[0] if isinstance(candidate.signals, list) and candidate.signals else candidate.signals
             if sig.notice_period_days <= 15:
@@ -138,7 +160,6 @@ class ExplanationGenerator:
             if features.work_mode_alignment_score < 0.5:
                 concerns.append(f"Work mode mismatch: Candidate prefers **{sig.preferred_work_mode}** but job is **{jd.work_mode}**.")
 
-        # Formatting narrative
         if strengths:
             lines.append("#### 👍 Primary Strengths")
             for s in strengths:
@@ -149,7 +170,8 @@ class ExplanationGenerator:
                 lines.append(f"- {c}")
         lines.append("")
 
-        # 2. SCORE BREAKDOWN TABLE
+        # Section 2: Score breakdown table gives recruiters full visibility
+        # into how each sub-score contributed to the final hybrid score.
         lines.append("### Score Breakdown")
         lines.append("| Category | Score | Detailed Components |")
         lines.append("| :--- | :---: | :--- |")
@@ -162,7 +184,9 @@ class ExplanationGenerator:
         lines.append(f"| **Logistics & Alignment** | `{features.notice_period_score:.2f}` | Notice Period: {features.notice_period_score:.2f}, Work Mode: {features.work_mode_alignment_score:.2f}, Title Progression Growth: {features.career_growth_score:.2f} |")
         lines.append("")
 
-        # 3. EVIDENCE TABLE
+        # Section 3: Evidence table surfaces specific terms and companies
+        # that justify capability claims, making the report auditable
+        # and defensible to hiring managers reviewing the shortlist.
         lines.append("### Extracted Evidence")
         evidence_list = ExplanationGenerator._extract_evidence(candidate, jd)
         if not evidence_list:
@@ -171,6 +195,8 @@ class ExplanationGenerator:
             lines.append("| Capability / Source | Evidence / Matched Terms | Confidence |")
             lines.append("| :--- | :--- | :---: |")
             for ev in evidence_list:
+                # Cap displayed terms at 6 to keep the table readable
+                # without hiding all matched evidence.
                 terms_str = ", ".join(f"`{t}`" for t in ev.matched_terms[:6])
                 lines.append(f"| **{ev.capability}** | {terms_str} <br> *({ev.source})* | `{ev.confidence:.2f}` |")
         lines.append("")
@@ -181,10 +207,16 @@ class ExplanationGenerator:
 
     @staticmethod
     def _extract_evidence(candidate: Candidate, jd: JobDescription) -> list[Evidence]:
+
         evidence_list = []
 
-        # 1. Capability Matches
+        # Combine profile summary and all career descriptions into one
+        # searchable text block to maximize alias and evidence term coverage.
         combined_text = (candidate.profile.summary + " " + " ".join([j.description for j in candidate.career_history])).lower()
+
+        # Section 1: Match candidate text against required JD capabilities only.
+        # Skipping non-required capabilities keeps the evidence table focused
+        # on what the JD actually demands rather than all possible skills.
         for cap_name, cap_data in CAPABILITY_MAP.items():
             is_required = any(req.lower() == cap_name.lower() for req in jd.required_capabilities)
             if not is_required:
@@ -200,6 +232,9 @@ class ExplanationGenerator:
 
             if matched_terms:
                 matched_terms = list(set(matched_terms))
+
+                # Confidence grows with the number of distinct matched terms,
+                # capped at 1.0 to reflect maximum alignment with the capability.
                 confidence = min(1.0, 0.5 + 0.1 * len(matched_terms))
                 evidence_list.append(Evidence(
                     capability=cap_name.capitalize(),
@@ -208,7 +243,8 @@ class ExplanationGenerator:
                     matched_terms=matched_terms
                 ))
 
-        # 2. Company Brand Matches
+        # Section 2: Company tier evidence provides pedigree context
+        # separate from technical capability matching.
         for job in candidate.career_history:
             tier_score = get_company_tier_score(job.company)
             if tier_score == 1.0:
@@ -226,7 +262,9 @@ class ExplanationGenerator:
                     matched_terms=[job.company]
                 ))
 
-        # 3. Education Pedigree Matches
+        # Section 3: Education pedigree evidence uses the precomputed
+        # tier label rather than re-evaluating institution quality here.
+        # Only the most recent or primary education record is checked.
         if candidate.education:
             edu = candidate.education[0]
             if "tier_1" in edu.tier.lower():
