@@ -1,6 +1,10 @@
 import csv
 
 
+# Diagnostic output layer that dumps the full feature score breakdown
+# for every ranked candidate into a CSV file.
+# Used during development and evaluation to verify that individual
+# sub-scores are behaving correctly before trusting the final hybrid ranking.
 class DebugSubmissionWriter:
 
     @staticmethod
@@ -23,11 +27,16 @@ class DebugSubmissionWriter:
 
             writer = csv.writer(file)
 
+            # Header row mirrors the CandidateFeatures dataclass field order.
+            # Grouped by scoring category so the CSV is human-navigable
+            # without needing to cross-reference the feature engineering code.
             writer.writerow([
                 "rank",
                 "candidate_id",
                 "final_score",
                 "similarity_score",
+                # Baseline category scores — weighted aggregates
+                # of the detailed sub-scores listed below each group.
                 "experience_score",
                 "skill_match_score",
                 "capability_match_score",
@@ -62,6 +71,8 @@ class DebugSubmissionWriter:
                 "career_growth_score"
             ])
 
+            # Slice to top_k before iterating to avoid writing
+            # more rows than requested when the ranked list is larger.
             for rank, (
                 candidate,
                 features
@@ -70,6 +81,9 @@ class DebugSubmissionWriter:
                 start=1
             ):
 
+                # Scores are rounded to 6 decimal places to balance
+                # numerical precision with CSV file readability.
+                # Sufficient for score comparison and ranking audits.
                 writer.writerow([
                     rank,
                     candidate.candidate_id,
