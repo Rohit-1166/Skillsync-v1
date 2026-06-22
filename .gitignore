@@ -16,12 +16,6 @@ ENV/
 # Scratch scripts (keeps development scripts local and private)
 scratch/
 
-# Large candidate database (prevents Git push crashes as file is > 400MB)
-
-# Team interview prep sheets & history automation guides (must remain private)
-PREPARATION_README.md
-docs/PREPARATION_GUIDE.md
-
 # Output and temporary diagnostic logs
 logs/
 *.log
