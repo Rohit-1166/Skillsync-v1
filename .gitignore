@@ -28,7 +28,6 @@ logs/
 *.log
 debug_submission.csv
 output/
-model/
 
 # IDE settings
 .vscode/
