@@ -31,7 +31,7 @@ team_members:
 # ============================================================================
 github_repo: "https://github.com/Rohit-1166/Skillsync-v1"
 
-sandbox_link: "https://huggingface.co/spaces/Rohit-1166/redrob-ranker"
+sandbox_link: "https://colab.research.google.com/github/Rohit-1166/Skillsync-v1/blob/main/Sandbox.ipynb"
 
 reproduce_command: "python main.py"
 
