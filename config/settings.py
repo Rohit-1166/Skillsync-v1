@@ -17,7 +17,7 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 CACHE_DIR.mkdir(exist_ok=True)
 
 # Embedding model used for semantic candidate-job matching.
-EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
+EMBEDDING_MODEL = str(BASE_DIR / "model" / "bge-small-en-v1.5")
 
 # Number of candidates retrieved from FAISS before reranking.
 TOP_K_RETRIEVAL = 1000

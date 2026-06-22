@@ -15,8 +15,7 @@ class FeatureEngineer:
         jd: JobDescription
     ) -> CandidateFeatures:
         """
-        Extracts 20 recruiter-inspired features and aggregates them into the 
-        6 baseline categories and a final hybrid score.
+        Extract features and aggregate them into 6 baseline categories + final hybrid score.
         """
         features = CandidateFeatures()
 
@@ -56,17 +55,13 @@ class FeatureEngineer:
         # Aggregate categories into baseline features for backward compatibility
         # =====================================================================
 
-        # Balance overall experience with how closely the candidate
-        # matches the experience range specified in the JD.
-        # Experience Score (20% weight in final features)
+        # 20% weight in final features
         features.experience_score = (
             0.50 * features.experience_years_score +
             0.50 * features.experience_fit_score
         )
 
-        # Required skills receive the highest weight, while preferred
-        # skills and technical depth provide supporting evidence.
-        # Skill Score (25% weight in final features)
+        # 25% weight in final features
         features.skill_match_score = (
             0.50 * features.required_skills_match +
             0.20 * features.preferred_skills_match +
@@ -74,51 +69,39 @@ class FeatureEngineer:
             0.15 * features.backend_technical_depth
         )
 
-        # Measures how well the candidate's past work aligns with
-        # the responsibilities and complexity of the target role.
-        # Capability Score (20% weight in final features)
+        # 20% weight in final features
         features.capability_match_score = (
             0.40 * features.required_capabilities_match +
             0.30 * features.project_complexity_score +
             0.30 * features.role_consistency_score
         )
 
-        # Industry familiarity is evaluated independently because
-        # domain knowledge can reduce onboarding time.
-        # Industry Score (10% weight in final features)
+        # 10% weight in final features
         features.industry_score = (
             get_industry_relevance_score(candidate.profile.current_industry)
         )
 
-        # Combines institution quality, degree relevance,
-        # and academic performance.
-        # Education Score (15% weight in final features)
+        # 15% weight in final features
         features.education_score = (
             0.50 * features.education_tier_score +
             0.30 * features.degree_relevance_score +
             0.20 * features.education_grade_score
         )
 
-        # Captures profile quality, recruiter engagement,
-        # and communication responsiveness.
-        # Recruiter Signals Score (10% weight in final features)
+        # 10% weight in final features
         features.recruiter_signal_score = (
             0.40 * features.profile_completeness_score +
             0.30 * features.recruiter_interest_score +
             0.30 * features.candidate_responsiveness_score
         )
 
-        # Practical hiring constraints such as notice period
-        # and work arrangement compatibility.
-        # Logistics Alignment Score (10% weight in final features)
+        # 10% weight in final features
         logistics_score = (
             0.40 * features.notice_period_score +
             0.30 * features.work_mode_alignment_score +
             0.30 * features.career_growth_score
         )
 
-        # Core candidate quality score before applying
-        # logistics-related adjustments.
         # Calculate final aggregated features score
         features.final_score = (
             0.20 * features.experience_score +
@@ -129,8 +112,6 @@ class FeatureEngineer:
             0.10 * features.recruiter_signal_score
         )
 
-        # Logistics factors influence ranking, but are intentionally
-        # kept as a smaller adjustment than technical qualifications.
         # Add 10% logistics adjustment weight
         features.final_score = 0.90 * features.final_score + 0.10 * logistics_score
 
@@ -143,8 +124,6 @@ class FeatureEngineer:
     def _experience_years_score(self, candidate: Candidate) -> float:
         exp = candidate.profile.years_of_experience
 
-        # Normalize experience into a 0–1 range where
-        # 15+ years receives maximum credit.
         return min(1.0, max(0.0, exp / 15.0)) # 15 years yields max score
 
     def _experience_fit_score(self, candidate: Candidate, jd: JobDescription) -> float:
@@ -155,8 +134,6 @@ class FeatureEngineer:
         if jd.min_experience <= exp <= jd.max_experience:
             return 1.0
 
-        # Penalize underqualified candidates proportionally
-        # to the gap from the minimum requirement.
         if exp < jd.min_experience:
             return exp / jd.min_experience if jd.min_experience > 0 else 1.0
 
@@ -173,8 +150,6 @@ class FeatureEngineer:
     def _career_stability_score(self, candidate: Candidate) -> float:
         stats = TimelineConsistencyAnalyzer.analyze(candidate)
 
-        # Reuse stability analysis instead of relying solely
-        # on the number of jobs in the candidate's history.
         return stats["stability_score"]
 
     def _required_skills_match(self, candidate: Candidate, jd: JobDescription) -> float:
@@ -183,8 +158,6 @@ class FeatureEngineer:
         if not jd.required_skills:
             return 1.0
 
-        # Required skills are treated as hard requirements
-        # and matched using exact skill names.
         matched = sum(1 for s in jd.required_skills if s.lower() in c_skills)
 
         return matched / len(jd.required_skills)
@@ -201,8 +174,6 @@ class FeatureEngineer:
     def _ai_technical_depth(self, candidate: Candidate) -> float:
         c_skills = {s.name.lower() for s in candidate.skills}
 
-        # Search both declared skills and work-history descriptions
-        # because AI expertise is often demonstrated through projects.
         desc_text = " ".join([j.description.lower() for j in candidate.career_history])
         desc_text += " " + candidate.profile.summary.lower()
 
@@ -216,15 +187,11 @@ class FeatureEngineer:
 
         matches = sum(1 for kw in ai_keywords if kw in c_skills or kw in desc_text)
 
-        # Three or more AI signals are considered sufficient
-        # evidence of strong AI exposure.
         return min(1.0, max(0.0, matches / 3.0)) # 3+ AI signals yields full score
 
     def _backend_technical_depth(self, candidate: Candidate) -> float:
         c_skills = {s.name.lower() for s in candidate.skills}
 
-        # Backend expertise is inferred from both technologies
-        # and practical project experience.
         desc_text = " ".join([j.description.lower() for j in candidate.career_history])
         desc_text += " " + candidate.profile.summary.lower()
 
@@ -255,8 +222,6 @@ class FeatureEngineer:
     def _project_complexity_score(self, candidate: Candidate) -> float:
         combined = (candidate.profile.summary + " " + " ".join([j.description for j in candidate.career_history])).lower()
 
-        # Complexity-related keywords act as lightweight indicators
-        # of large-scale systems and challenging engineering work.
         complexity_keywords = [
             "scale", "scalability", "optimiz", "performance", "latency", "throughput", 
             "distributed", "millions", "billions", "pipeline", "architect", 
@@ -273,8 +238,6 @@ class FeatureEngineer:
         if not target_tokens or not candidate.career_history:
             return 1.0
 
-        # Discard generic words
-        # Remove broad role terms so matching focuses on specialization.
         generic = {"engineer", "developer", "programmer", "architect", "analyst", "senior", "lead", "staff", "principal", "junior", "associate", "intern"}
 
         target_role_tokens = target_tokens - generic
@@ -346,8 +309,6 @@ class FeatureEngineer:
 
         grade_str = candidate.education[0].grade.lower().strip()
 
-        # Missing grade information receives a neutral score
-        # instead of heavily penalizing the candidate.
         if not grade_str:
             return 0.7
 
@@ -375,8 +336,6 @@ class FeatureEngineer:
             if num_match:
                 val = float(num_match.group(1))
 
-                # Supports percentage, GPA, CGPA,
-                # and 4-point grading systems.
                 if val > 10.0:
                     return max(0.0, min(1.0, val / 100.0))
                 elif val > 4.0:
@@ -400,8 +359,6 @@ class FeatureEngineer:
         else:
             signal = signals
 
-        # Missing recruiter signals receive a neutral score
-        # rather than being heavily penalized.
         if not signal:
             return 0.5
 
@@ -432,8 +389,6 @@ class FeatureEngineer:
         # Log scaling saves count (cap at 20 saves)
         saves = min(1.0, np.log1p(signal.saved_by_recruiters_30d) / np.log1p(20))
 
-        # Recruiter saves are weighted slightly higher because
-        # they indicate stronger hiring intent than profile views.
         return 0.3 * views + 0.3 * apps + 0.4 * saves
 
     def _candidate_responsiveness_score(self, candidate: Candidate) -> float:
@@ -469,8 +424,6 @@ class FeatureEngineer:
 
         days = signal.notice_period_days
 
-        # Shorter notice periods increase hiring flexibility
-        # and therefore receive higher scores.
         if days <= 15:
             return 1.0
 
@@ -499,16 +452,12 @@ class FeatureEngineer:
         pref = signal.preferred_work_mode.lower()
         jd_mode = jd.work_mode.lower()
 
-        # Flexible candidates are considered compatible
-        # with any employer work arrangement.
         if pref == jd_mode or pref == "flexible":
             return 1.0
 
         if jd_mode == "remote" and pref in ["remote", "flexible"]:
             return 1.0
 
-        # Willingness to relocate partially offsets
-        # work mode mismatches.
         if signal.willing_to_relocate:
             return 0.8
 
@@ -518,8 +467,6 @@ class FeatureEngineer:
         if not candidate.career_history:
             return 0.5
 
-        # Approximate career progression using title seniority
-        # because detailed promotion history is unavailable.
         def get_title_seniority(title: str) -> int:
             t = title.lower()
 
@@ -551,8 +498,6 @@ class FeatureEngineer:
         latest_job = candidate.career_history[0]
         oldest_job = candidate.career_history[-1]
 
-        # Company tier is included so growth at stronger organizations
-        # contributes more to the progression signal.
         latest_seniority = get_title_seniority(latest_job.title) * get_company_tier_score(latest_job.company)
         oldest_seniority = get_title_seniority(oldest_job.title) * get_company_tier_score(oldest_job.company)
 

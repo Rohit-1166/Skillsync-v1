@@ -1,5 +1,5 @@
 import os
-# Force Hugging Face Hub to run in offline mode using the local cache
+# offline validation checks
 os.environ["HF_HUB_OFFLINE"] = "1"
 
 from config.settings import JD_FILE
@@ -14,31 +14,24 @@ from utils.logger import logger
 
 
 def main():
-
+    # TODO: support CLI arguments for dynamic JDs
     logger.info("Starting SkillSync matching pipeline...")
 
-    # 1. Read and parse Job Description
-    logger.info("Reading Job Description...")
-
+    # Parse target JD
     jd_text = DocumentReader.read(JD_FILE)
-
     jd = JDParser(jd_text).parse()
 
     logger.info(f"Parsed Job Description: '{jd.title}' at '{jd.company}'")
 
-    # 2. Run Embedding Pipeline to load/generate candidate index
     pipeline = EmbeddingPipeline()
-
     faiss_index, candidates = pipeline.run()
 
-    # 3. Perform hybrid ranking (semantic search + feature scoring)
-    logger.info("Ranking candidates...")
-
+    # Run matching
     ranker = HybridRanker(pipeline.embedder, faiss_index)
-
     ranked = ranker.rank(candidates, jd)
+    # print(f"DEBUG: Scored {len(ranked)} candidates successfully")
 
-    # 4. Write final submissions
+    # Write output
     logger.info("Writing submission files...")
 
     SubmissionWriter.write(

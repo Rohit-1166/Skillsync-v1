@@ -46,8 +46,8 @@ compute:
   os: "Windows 11"
   uses_gpu_for_inference: false
   has_network_during_ranking: false
-  pre_computation_required: true
-  pre_computation_time_minutes: 40
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
 
 # ============================================================================
 # AI tools declaration

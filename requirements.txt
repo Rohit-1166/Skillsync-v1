@@ -1,21 +1,25 @@
 # SkillSync — Python Dependencies
 
 # 1. Core NLP & Vector Search (Offline Inference)
-sentence-transformers==5.5.1
-faiss-cpu==1.14.3
-numpy==2.1.1
-pymupdf==1.27.2.3
+# Force CPU-only PyTorch to reduce installation size from 2.5GB to ~150MB 
+# (Fixes the 10-20 minute setup time and paging file memory errors on new PCs)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.6.0+cpu
+sentence-transformers>=3.0.0
+faiss-cpu>=1.7.4
+numpy>=1.24.0
+pymupdf>=1.22.0
 
 # 2. API matching endpoints
-fastapi==0.137.1
-uvicorn==0.49.0
-python-multipart==0.0.32
+fastapi>=0.100.0
+uvicorn>=0.22.0
+python-multipart>=0.0.6
 
 # 3. Data Analysis & Profiling
-pandas==3.0.3
-scikit-learn==1.9.0
+pandas>=2.0.0
+scikit-learn>=1.2.0
 
 # 4. Utilities & Support (transitive/helper packages)
-tqdm==4.68.2
-pyyaml==6.0.3
-python-dotenv==1.2.2
+tqdm>=4.65.0
+pyyaml>=6.0.0
+python-dotenv>=1.0.0

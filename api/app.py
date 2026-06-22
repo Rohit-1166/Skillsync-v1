@@ -22,8 +22,7 @@ from reasoning.explanation_generator import ExplanationGenerator
 from utils.document_reader import DocumentReader
 from utils.logger import logger
 
-# These objects are loaded once during startup and reused across requests.
-# This avoids repeatedly loading large embedding models and FAISS indexes.
+# Startup state
 pipeline = None
 ranker = None
 candidates = None
@@ -31,8 +30,8 @@ candidate_map = None
 default_jd = None
 current_jd = None
 
-# FastAPI lifespan runs once at startup and shutdown.
-# Heavy resources are initialized here so API requests remain fast.
+# TODO: add middleware for request logging/metrics if needed later
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global pipeline, ranker, candidates, candidate_map, default_jd
@@ -40,18 +39,13 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing SkillSync matching service...")
 
     try:
-        # Load candidate embeddings and FAISS index from cache.
         pipeline = EmbeddingPipeline()
         faiss_index, candidates = pipeline.run()
 
-        # Ranker combines semantic retrieval with feature-based scoring.
         ranker = HybridRanker(pipeline.embedder, faiss_index)
-
-        # O(1) candidate lookup by ID instead of scanning the full list.
         candidate_map = {c.candidate_id: c for c in candidates}
 
-        # Load a fallback Job Description that can be used
-        # when no JD has been uploaded in the current session.
+        # Load fallback JD if available
         if Path(JD_FILE).exists():
             jd_text = DocumentReader.read(JD_FILE)
             default_jd = JDParser(jd_text).parse()
@@ -88,6 +82,7 @@ app = FastAPI(
 class RankTextRequest(BaseModel):
     jd_text: str
     top_k: int = 100
+    semantic_weight: float = 0.60
 
 @app.get("/", response_class=HTMLResponse)
 def read_root():
@@ -152,7 +147,8 @@ def rank_candidates_by_text(request: RankTextRequest):
         ranked = ranker.rank(
             candidates,
             jd,
-            top_k_retrieval=500
+            top_k_retrieval=500,
+            semantic_weight=request.semantic_weight
         )
 
         results = []
@@ -183,7 +179,8 @@ def rank_candidates_by_text(request: RankTextRequest):
 @app.post("/rank/pdf")
 async def rank_candidates_by_pdf(
     file: UploadFile = File(...),
-    top_k: int = Form(100)
+    top_k: int = Form(100),
+    semantic_weight: float = Form(0.60)
 ):
 
     if ranker is None or candidates is None:
@@ -225,7 +222,8 @@ async def rank_candidates_by_pdf(
         ranked = ranker.rank(
             candidates,
             jd,
-            top_k_retrieval=500
+            top_k_retrieval=500,
+            semantic_weight=semantic_weight
         )
 
         results = []
@@ -257,7 +255,8 @@ async def rank_candidates_by_pdf(
 @app.get("/candidate/{candidate_id}/explain")
 def explain_candidate(
     candidate_id: str,
-    format: str = Query("json", pattern="^(json|markdown)$")
+    format: str = Query("json", pattern="^(json|markdown)$"),
+    semantic_weight: float = Query(0.60)
 ):
     global current_jd
 
@@ -323,8 +322,8 @@ def explain_candidate(
         # Final score combines semantic relevance with
         # feature-engineered hiring signals.
         hybrid_score = (
-            0.60 * similarity
-            + 0.40 * features.final_score
+            semantic_weight * similarity
+            + (1.0 - semantic_weight) * features.final_score
         )
 
         features.final_score = hybrid_score
@@ -337,13 +336,10 @@ def explain_candidate(
             jd=active_jd
         )
 
-        # Markdown output is useful for reports,
-        # exports and frontend rendering.
         if format == "markdown":
             return PlainTextResponse(report)
 
-        # Convert complex objects into JSON-safe dictionaries
-        # before returning them through the API.
+        # TODO: serialize full candidate profile instead of cherry-picking fields here
         details = {
             "headline": candidate.profile.headline,
             "summary": candidate.profile.summary,
@@ -409,7 +405,10 @@ def explain_candidate(
                 else "UNALIGNED",
 
             "report_markdown": report,
-            "candidate_details": details
+            "candidate_details": details,
+            "jd_required_skills": active_jd.required_skills if active_jd else [],
+            "jd_title": active_jd.title if active_jd else "",
+            "jd_company": active_jd.company if active_jd else ""
         }
 
     except Exception as e:
@@ -418,3 +417,28 @@ def explain_candidate(
             status_code=500,
             detail=str(e)
         )
+
+
+@app.get("/candidates/flagged")
+def get_flagged_candidates():
+    if ranker is None or candidates is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Matching engine is not initialized."
+        )
+    
+    flagged = []
+    for c in candidates:
+        is_honeypot, reason = ranker._is_honeypot(c)
+        if is_honeypot:
+            flagged.append({
+                "candidate_id": c.candidate_id,
+                "current_title": c.profile.current_title or "N/A",
+                "current_company": c.profile.current_company or "N/A",
+                "reason": reason
+            })
+            
+    return {
+        "total_flagged": len(flagged),
+        "flagged_candidates": flagged
+    }

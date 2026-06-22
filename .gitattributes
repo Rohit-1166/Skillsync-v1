@@ -1,0 +1,3 @@
+cache/*.npy filter=lfs diff=lfs merge=lfs -text
+cache/*.index filter=lfs diff=lfs merge=lfs -text
+model/bge-small-en-v1.5/model.safetensors filter=lfs diff=lfs merge=lfs -text
