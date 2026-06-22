@@ -60,6 +60,25 @@ class ExplanationGenerator:
         matched_skills = [s for s in jd.required_skills if is_semantic_match(s)]
         missing_skills = [s for s in jd.required_skills if not is_semantic_match(s)]
         
+        # De-duplicate singular/plural versions (e.g. "embedding" and "embeddings") to avoid redundant text
+        def deduplicate_plural_skills(skills):
+            unique = []
+            for s in skills:
+                # If a matching base word exists (differing only by trailing 's'), skip it
+                s_lower = s.lower().strip()
+                is_dup = False
+                for u in unique:
+                    u_lower = u.lower().strip()
+                    if s_lower == u_lower or s_lower + 's' == u_lower or u_lower + 's' == s_lower:
+                        is_dup = True
+                        break
+                if not is_dup:
+                    unique.append(s)
+            return unique
+
+        matched_skills = deduplicate_plural_skills(matched_skills)
+        missing_skills = deduplicate_plural_skills(missing_skills)
+
         matched_str = " and ".join(matched_skills[:2]) if matched_skills else "core technical skills"
         missing_str = " and ".join(missing_skills[:2]) if missing_skills else "certain domain requirements"
 
