@@ -21,6 +21,109 @@ Compared to standard keyword-matching or plain vector-embedding search engines, 
 
 ---
 
+## 🏗️ High-Level System Architecture
+
+```mermaid
+graph TD
+    %% Styling Classes
+    classDef file fill:#0f172a,stroke:#3b82f6,stroke-width:1.5px,color:#f8fafc;
+    classDef process fill:#064e3b,stroke:#10b981,stroke-width:1.5px,color:#f8fafc;
+    classDef db fill:#1e1b4b,stroke:#8b5cf6,stroke-width:1.5px,color:#f8fafc;
+    classDef ui fill:#022c22,stroke:#34d399,stroke-width:1.5px,color:#f8fafc;
+
+    %% Ingestion/Indexing
+    subgraph Ingestion ["1. Offline Indexing Pipeline"]
+        RawResumes["data/candidates.jsonl"]:::file
+        CandParser["parser/candidate_parser.py"]:::process
+        DocBuilder["embeddings/semantic_document_builder.py"]:::process
+        ModelEncoder["embeddings/embedder.py (SentenceTransformer)"]:::process
+        FaissSave["retrieval/faiss_index.py"]:::process
+        EmbeddingsCache["cache/embeddings.npy"]:::db
+        FaissIndexFile["cache/faiss_index.bin"]:::db
+    end
+
+    RawResumes -->|Read lines| CandParser
+    CandParser -->|Candidate objects| DocBuilder
+    DocBuilder -->|Formatted text docs| ModelEncoder
+    ModelEncoder -->|Vector embeddings| FaissSave
+    FaissSave -->|Serialize cache| EmbeddingsCache
+    FaissSave -->|Serialize index| FaissIndexFile
+
+    %% JD Query Parsing
+    subgraph QueryIngestion ["2. Job Description Parsing"]
+        RawJD["Upload: JD PDF / Text"]:::file
+        DocReader["utils/document_reader.py"]:::process
+        JDParser["parser/jd_parser.py"]:::process
+        JobDescModel["models/job_description.py"]:::file
+    end
+
+    RawJD --> DocReader
+    DocReader -->|Extracted text string| JDParser
+    JDParser -->|Parse fields| JobDescModel
+
+    %% Core Ranking Engine
+    subgraph HybridEngine ["3. Hybrid Ranking Engine (ranking/hybrid_ranker.py)"]
+        RankCall["HybridRanker.rank()"]:::process
+        
+        subgraph Stage1 ["Stage 1: Semantic Retrieval"]
+            EncodeJD["Embedder.encode(jd_text)"]:::process
+            FaissSearch["FaissIndex.search()"]:::process
+        end
+
+        subgraph Stage2 ["Stage 2: Fraud Filtering"]
+            HoneypotCheck["_is_honeypot(candidate)"]:::process
+        end
+
+        subgraph Stage3 ["Stage 3: Feature Engineering"]
+            FeatExtract["FeatureEngineer.extract()"]:::process
+            TenureCheck["TimelineConsistencyAnalyzer.analyze()"]:::process
+        end
+
+        subgraph Stage4 ["Stage 4: scoring & Tie-Break"]
+            ScoreCalc["Compute Hybrid Weighted Score"]:::process
+            SortResults["Sort by Score + ID Tie-Break"]:::process
+        end
+    end
+
+    JobDescModel --> RankCall
+    FaissIndexFile -.->|Load index| FaissSearch
+    EmbeddingsCache -.->|Load metadata| RankCall
+    
+    RankCall --> EncodeJD
+    EncodeJD -->|Query vector| FaissSearch
+    FaissSearch -->|Retrieve top 500 candidates| HoneypotCheck
+    HoneypotCheck -->|Filter Synthetic/Logical Anomaly| FeatExtract
+    FeatExtract --> TenureCheck
+    TenureCheck --> ScoreCalc
+    ScoreCalc --> SortResults
+
+    %% API and Frontend Delivery
+    subgraph Delivery ["4. API & Interactive Recruiter Dashboard"]
+        AppEndpoints["api/app.py (FastAPI)"]:::process
+        ExpGen["reasoning/explanation_generator.py"]:::process
+        HTMLDashboard["api/static/index.html"]:::ui
+        
+        subgraph ModalOutputs ["Dashboard Toolsets"]
+            RadarChart["Interactive SVG Radar Chart"]:::ui
+            CompareModal["Side-by-side Comparison Matrix"]:::ui
+            PitchGen["Outreach Pitch Export (.txt)"]:::ui
+            AuditModal["Security Audit Excluded Log"]:::ui
+        end
+    end
+
+    SortResults -->|Ranked Candidates| AppEndpoints
+    AppEndpoints -->|Explain request| ExpGen
+    ExpGen -->|Candidate matching report| AppEndpoints
+    AppEndpoints -->|JSON/HTML payloads| HTMLDashboard
+    
+    HTMLDashboard --> RadarChart
+    HTMLDashboard --> CompareModal
+    HTMLDashboard --> PitchGen
+    HTMLDashboard --> AuditModal
+```
+
+---
+
 ## 🛠️ Folder Structure & Architecture
 
 ```
