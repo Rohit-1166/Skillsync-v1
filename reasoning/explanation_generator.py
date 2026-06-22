@@ -188,7 +188,18 @@ class ExplanationGenerator:
         lines.append("| Category | Score | Detailed Components |")
         lines.append("| :--- | :---: | :--- |")
         lines.append(f"| **Experience & Stability** | `{features.experience_score:.2f}` | Years: {features.experience_years_score:.2f}, Fit: {features.experience_fit_score:.2f}, Tenure: {features.average_tenure_score:.2f}, Stability: {features.career_stability_score:.2f} |")
-        lines.append(f"| **Skill & Technical Depth** | `{features.skill_match_score:.2f}` | Required: {features.required_skills_match:.2f}, Preferred: {features.preferred_skills_match:.2f}, AI Depth: {features.ai_technical_depth:.2f}, Backend Depth: {features.backend_technical_depth:.2f} |")
+        # Extract github activity and assessment scores from recruiter signals for detailed display
+        github_score = 0.5
+        assessment_score = 0.5
+        sig = candidate.signals[0] if isinstance(candidate.signals, list) and candidate.signals else candidate.signals
+        if sig:
+            if sig.github_activity_score >= 0:
+                github_score = sig.github_activity_score / 100.0
+            assessments = sig.skill_assessment_scores
+            if assessments:
+                assessment_score = sum(assessments.values()) / (len(assessments) * 100.0)
+
+        lines.append(f"| **Skill & Technical Depth** | `{features.skill_match_score:.2f}` | Required: {features.required_skills_match:.2f}, Preferred: {features.preferred_skills_match:.2f}, AI Depth: {features.ai_technical_depth:.2f}, Backend Depth: {features.backend_technical_depth:.2f}, GitHub: {github_score:.2f}, Assessments: {assessment_score:.2f} |")
         lines.append(f"| **Capability & Job Alignment** | `{features.capability_match_score:.2f}` | Capabilities: {features.required_capabilities_match:.2f}, Scale Term Complexity: {features.project_complexity_score:.2f}, Role Consistency: {features.role_consistency_score:.2f} |")
         lines.append(f"| **Industry Alignment** | `{features.industry_score:.2f}` | Industry Match: {features.industry_score:.2f} |")
         lines.append(f"| **Education Quality** | `{features.education_score:.2f}` | Institution Tier: {features.education_tier_score:.2f}, Field Relevance: {features.degree_relevance_score:.2f}, Grades: {features.education_grade_score:.2f} |")
