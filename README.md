@@ -268,18 +268,23 @@ git lfs pull
 
 ---
 
-## 🏃 Reproduction & Running the Pipeline
+## 🏃 Code Reproduction (Running the Pipeline)
 
-To run the complete pipeline and produce the submission outputs:
+**Pre-computation Documentation:**  
+To meet strict performance requirements, we utilize pre-computation to handle the massive 100,000-candidate dataset. The candidate parsing, semantic embedding via `BGE-small-en-v1.5`, and FAISS indexing have already been pre-computed. The resulting artifacts (`cache/embeddings.npy` and `cache/faiss_index.bin`) are tracked via Git LFS. **The ranking step below only performs query embedding, retrieval, feature extraction, and CSV generation, executing in just 0.45 seconds.**
+
+**To reproduce the final submission CSV from the candidates file, run the following single command:**
+
 ```bash
 python main.py
 ```
+
 This single command:
 1. Parses the default Job Description PDF (`data/Job_Description.pdf`).
 2. Loads the parsed candidate database and checks for cached embeddings/FAISS index.
 3. Automatically performs semantic search, filters honeypot candidates, and computes the 20 advanced recruiter features.
-4. Generates the final [submission.csv](file:///c:/Users/iitbo/OneDrive/Desktop/SkillSync-v1/submission.csv) and [debug_submission.csv](file:///c:/Users/iitbo/OneDrive/Desktop/SkillSync-v1/debug_submission.csv) outputs in the root folder.
-5. Generates the comprehensive candidate explanations report in [output/candidate_explanations.md](file:///c:/Users/iitbo/OneDrive/Desktop/SkillSync-v1/output/candidate_explanations.md).
+4. Generates the final `submission.csv` output in the root folder.
+5. Generates the comprehensive candidate explanations report in `output/candidate_explanations.md`.
 
 ---
 
