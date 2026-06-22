@@ -235,6 +235,13 @@ git lfs install
 git clone https://github.com/Rohit-1166/Skillsync-v1.git
 ```
 
+**Troubleshooting: `OSError: Error no file named model.safetensors`**  
+If you cloned the repository *before* installing Git LFS, your machine only downloaded tiny 133-byte text "pointer files" instead of the actual 133MB model. To fix this instantly, simply run:
+```bash
+git lfs install
+git lfs pull
+```
+
 ### Prerequisites
 - Python 3.11+
 - Virtual environment (recommended)
