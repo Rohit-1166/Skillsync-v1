@@ -32,18 +32,27 @@ SkillSync features a beautiful interactive UI to visualize matches, view dynamic
 
 ## 🚀 Key Differences & Architectural Innovations
 
-Compared to standard keyword-matching or plain vector-embedding search engines, SkillSync introduces three major innovations:
+Compared to standard keyword-matching or plain vector-embedding search engines, SkillSync introduces six major innovations designed for high-scale, secure, and accurate recruitment:
 
-1. **Strategic Honeypot & Trap Filters**: 
-   - *The Trap*: Most candidate Discovery portals can be gamed by keyword stuffers (e.g., a candidate claiming "RAG / LLM" expertise whose actual title is "Marketing Manager").
-   - *The Solution*: SkillSync parses and scores role consistency and career trajectory progression. If a candidate lists expert skills but has an unrelated title, or has impossible job intervals (such as 14 years tenure at a company that is only 3 years old), our system automatically detects and down-grades them.
+1. **Strategic Honeypot & Trap Filters (Fraud Detection)**: 
+   - *The Trap*: Most candidate portals can be gamed by keyword stuffers (e.g., claiming "RAG / LLM" expertise when their actual title is "Marketing Manager").
+   - *The Solution*: SkillSync parses and scores role consistency and career trajectory progression. If a candidate lists expert skills but has an unrelated title, or has impossible job intervals (such as 14 years tenure at a company that is only 3 years old), our system automatically detects and downgrades them.
    
 2. **20 Advanced Recruiter-Inspired Features**:
-   - Rather than relying on simple text similarity, SkillSync calculates 20 distinct features across 6 categories (Experience & Stability, Skill & Technical Depth, Capability & Alignment, Education Quality, Recruiter Engagement, and Logistics) to mimic the judgment of senior recruiting architects.
+   - Rather than relying solely on raw text similarity, SkillSync's Hybrid Ranker calculates 20 distinct numerical features across 6 categories: *Experience & Stability, Skill Depth, Capability Alignment, Education Pedigree, Recruiter Engagement, and Logistics*. This mathematically mimics the holistic judgment of a senior recruiting architect.
 
 3. **Flat Cosine Semantic Caching (CPU Optimized)**:
-   - High-throughput vector databases usually require GPUs. SkillSync utilizes a local, cached **FAISS index FlatIP** structure on CPU to fetch and score candidates.
-   - Complete pipeline matching executes in **`0.45` seconds** for 100,000 candidates!
+   - High-throughput vector databases usually require expensive GPUs. SkillSync utilizes a local, cached **FAISS index (Flat Inner Product)** structure heavily optimized for CPU architecture. 
+   - The complete pipeline matching algorithm executes in **`0.45` seconds** across a massive pool of 100,000 candidates.
+
+4. **100% Offline AI Execution (Zero Data Exfiltration)**:
+   - Enterprise recruiters cannot send confidential resumes or internal job descriptions to public APIs like OpenAI or Anthropic. SkillSync runs entirely locally using offline weights for the `BGE-small-en-v1.5` dense retrieval model. No internet connection is required, guaranteeing absolute data privacy and zero API costs.
+
+5. **Semantic Document Synthesis**:
+   - Raw JSON candidate objects perform poorly in vector space because their structure doesn't match a paragraph-style Job Description. SkillSync automatically synthesizes abstract JSON trees into "professional natural-language profiles" *before* embedding them, ensuring the cosine similarity math is highly accurate.
+
+6. **Explainable AI (XAI) Justifications**:
+   - SkillSync does not just output a "magic black-box score." The system dynamically generates plain-English, recruiter-readable justifications that explain exactly *why* a candidate was ranked highly, pointing to specific evidence in their career history, skill overlaps, and tenure stability.
 
 ---
 
