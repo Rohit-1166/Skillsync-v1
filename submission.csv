@@ -1,101 +1,101 @@
 candidate_id,rank,score,reasoning
-CAND_0046064,1,0.7728,Senior NLP Engineer with 8.9 yrs; ex-Salesforce; strong AI/NLP depth; response rate 0.78 with 30d notice.
-CAND_0002025,2,0.7716,Senior AI Engineer with 5.9 yrs; ex-Apple; strong AI/NLP depth; response rate 0.80 with 30d notice.
-CAND_0081846,3,0.7622,Lead AI Engineer with 6.7 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.73 with 30d notice.
-CAND_0055905,4,0.7566,Senior Machine Learning Engineer with 8.1 yrs; ex-Uber; strong AI/NLP depth; response rate 0.87 with 30d notice.
-CAND_0068811,5,0.7548,Applied ML Engineer with 8.0 yrs; ex-Salesforce; strong AI/NLP depth; response rate 0.42 with 30d notice.
-CAND_0077337,6,0.7538,Staff Machine Learning Engineer with 7.0 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.95 with 60d notice.
-CAND_0092278,7,0.7525,Senior NLP Engineer with 6.8 yrs; ex-Microsoft; strong AI/NLP depth; response rate 0.07 with 90d notice.
-CAND_0079387,8,0.75,AI Engineer with 6.9 yrs; ex-Microsoft; strong AI/NLP depth; response rate 0.81 with 30d notice.
-CAND_0064904,9,0.747,AI Engineer with 4.9 yrs; strong AI/NLP depth; response rate 0.78 with 90d notice.
-CAND_0005260,10,0.7464,Senior NLP Engineer with 5.2 yrs; ex-Netflix; strong AI/NLP depth; response rate 0.86 with 60d notice.
-CAND_0071974,11,0.7463,Senior AI Engineer with 7.8 yrs; ex-Netflix; strong AI/NLP depth; response rate 0.76 with 45d notice.
-CAND_0094759,12,0.7452,Lead AI Engineer with 8.6 yrs; ex-Meta; strong AI/NLP depth; response rate 0.11 with 30d notice.
-CAND_0028793,13,0.7447,Search Engineer with 7.2 yrs; ex-Google; strong AI/NLP depth; response rate 0.57 with 120d notice.
-CAND_0011687,14,0.7376,Senior NLP Engineer with 7.8 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.89 with 15d notice.
-CAND_0018499,15,0.7372,Senior Machine Learning Engineer with 7.2 yrs; ex-Google; strong AI/NLP depth; response rate 0.61 with 15d notice.
-CAND_0024878,16,0.7369,AI Specialist with 5.7 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.84 with 60d notice.
-CAND_0033861,17,0.7354,Senior NLP Engineer with 8.0 yrs; strong AI/NLP depth; response rate 0.16 with 30d notice.
-CAND_0041610,18,0.7347,Recommendation Systems Engineer with 6.7 yrs; strong AI/NLP depth; response rate 0.52 with 30d notice.
-CAND_0051004,19,0.7332,Senior Data Scientist with 4.7 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.41 with 15d notice.
-CAND_0062247,20,0.7329,AI Engineer with 7.3 yrs; ex-Google; strong AI/NLP depth; response rate 0.78 with 30d notice.
-CAND_0087630,21,0.732,AI Engineer with 7.2 yrs; strong AI/NLP depth; response rate 0.45 with 30d notice.
-CAND_0024620,22,0.7319,AI Engineer with 5.9 yrs; strong AI/NLP depth; response rate 0.41 with 45d notice.
-CAND_0044222,23,0.7315,AI Engineer with 7.7 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.60 with 60d notice.
-CAND_0086022,24,0.7313,Senior Applied Scientist with 5.3 yrs; ex-Uber; strong AI/NLP depth; response rate 0.55 with 0d notice.
-CAND_0079284,25,0.731,Machine Learning Engineer with 4.9 yrs; ex-Google; strong AI/NLP depth; response rate 0.79 with 30d notice.
-CAND_0012957,26,0.7301,Search Engineer with 4.9 yrs; strong AI/NLP depth; response rate 0.67 with 120d notice.
-CAND_0007411,27,0.7299,Senior Machine Learning Engineer with 8.0 yrs; ex-Amazon; strong AI/NLP depth; response rate 0.12 with 15d notice.
-CAND_0005538,28,0.7286,Senior AI Engineer with 5.9 yrs; ex-Google; strong AI/NLP depth; response rate 0.81 with 90d notice.
-CAND_0011162,29,0.727,Recommendation Systems Engineer with 5.8 yrs; ex-Google; strong AI/NLP depth; response rate 0.75 with 90d notice.
-CAND_0010257,30,0.7267,Senior Data Scientist with 6.5 yrs; ex-Google; strong AI/NLP depth; response rate 0.72 with 120d notice.
-CAND_0030953,31,0.726,Search Engineer with 7.8 yrs; strong AI/NLP depth; response rate 0.63 with 45d notice.
-CAND_0037566,32,0.7257,Machine Learning Engineer with 6.9 yrs; strong AI/NLP depth; response rate 0.50 with 15d notice.
-CAND_0009024,33,0.7256,Search Engineer with 5.2 yrs; ex-Google; strong AI/NLP depth; response rate 0.46 with 30d notice.
-CAND_0065878,34,0.7252,Senior Data Scientist with 7.8 yrs; ex-Uber; strong AI/NLP depth; response rate 0.48 with 15d notice.
-CAND_0060072,35,0.7251,Staff Machine Learning Engineer with 5.7 yrs; ex-Amazon; strong AI/NLP depth; response rate 0.10 with 90d notice.
-CAND_0061265,36,0.7234,Recommendation Systems Engineer with 6.6 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.94 with 120d notice.
-CAND_0065195,37,0.7233,Search Engineer with 5.1 yrs; ex-Google; strong AI/NLP depth; response rate 0.80 with 45d notice.
-CAND_0018549,38,0.7231,Recommendation Systems Engineer with 6.8 yrs; ex-Uber; strong AI/NLP depth; response rate 0.73 with 60d notice.
-CAND_0093912,39,0.7228,Senior Data Scientist with 5.3 yrs; ex-Apple; strong AI/NLP depth; response rate 0.66 with 30d notice.
-CAND_0024466,40,0.7223,Search Engineer with 5.2 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.47 with 120d notice.
-CAND_0046525,41,0.7206,Senior Machine Learning Engineer with 6.1 yrs; strong AI/NLP depth; response rate 0.88 with 60d notice.
-CAND_0031593,42,0.7203,Search Engineer with 7.8 yrs; strong AI/NLP depth; response rate 0.58 with 90d notice.
-CAND_0099806,43,0.7187,AI Engineer with 4.6 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.76 with 30d notice.
-CAND_0083307,44,0.7182,Search Engineer with 7.8 yrs; ex-Netflix; strong AI/NLP depth; response rate 0.70 with 120d notice.
-CAND_0092706,45,0.7175,AI Research Engineer with 5.8 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.78 with 120d notice.
-CAND_0078002,46,0.7168,Machine Learning Engineer with 6.3 yrs; ex-Meta; strong AI/NLP depth; response rate 0.86 with 60d notice.
-CAND_0081686,47,0.7157,Search Engineer with 6.0 yrs; ex-Netflix; strong AI/NLP depth; response rate 0.91 with 60d notice.
-CAND_0070202,48,0.7155,Machine Learning Engineer with 5.1 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.60 with 90d notice.
-CAND_0088025,49,0.715,Staff Machine Learning Engineer with 8.6 yrs; strong AI/NLP depth; response rate 0.83 with 90d notice.
-CAND_0011432,50,0.7149,Senior Data Scientist with 7.6 yrs; ex-Amazon; strong AI/NLP depth; response rate 0.67 with 60d notice.
-CAND_0030031,51,0.7147,AI Engineer with 5.7 yrs; ex-Microsoft; strong AI/NLP depth; response rate 0.94 with 30d notice.
-CAND_0058688,52,0.7146,AI Engineer with 6.7 yrs; ex-Apple; strong AI/NLP depth; response rate 0.74 with 15d notice.
-CAND_0009691,53,0.7141,Applied ML Engineer with 6.2 yrs; ex-Amazon; strong AI/NLP depth; response rate 0.64 with 120d notice.
-CAND_0098846,54,0.713,AI Engineer with 7.6 yrs; ex-Google; strong AI/NLP depth; response rate 0.62 with 45d notice.
-CAND_0020494,55,0.7128,AI Research Engineer with 5.9 yrs; strong AI/NLP depth; response rate 0.26 with 45d notice.
-CAND_0059017,56,0.712,AI Research Engineer with 6.8 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.75 with 90d notice.
-CAND_0049896,57,0.7115,Search Engineer with 7.3 yrs; strong AI/NLP depth; response rate 0.43 with 90d notice.
-CAND_0060054,58,0.711,AI Engineer with 6.4 yrs; ex-Uber; strong AI/NLP depth; response rate 0.86 with 15d notice.
-CAND_0014440,59,0.7103,Recommendation Systems Engineer with 6.4 yrs; strong AI/NLP depth; response rate 0.64 with 60d notice.
-CAND_0015578,60,0.7103,AI Engineer with 5.4 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.65 with 90d notice.
-CAND_0006567,61,0.7096,Senior AI Engineer with 7.9 yrs; ex-Meta; strong backend depth; response rate 0.79 with 60d notice.
-CAND_0066999,62,0.7096,Recommendation Systems Engineer with 5.9 yrs; ex-Microsoft; strong AI/NLP depth; response rate 0.63 with 15d notice.
-CAND_0039838,63,0.7094,Recommendation Systems Engineer with 4.9 yrs; ex-Amazon; strong AI/NLP depth; response rate 0.80 with 90d notice.
-CAND_0051615,64,0.7087,Search Engineer with 4.6 yrs; ex-Meta; strong AI/NLP depth; response rate 0.88 with 60d notice.
-CAND_0041669,65,0.7083,Recommendation Systems Engineer with 8.0 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.77 with 60d notice.
-CAND_0062413,66,0.7078,AI Research Engineer with 6.6 yrs; strong AI/NLP depth; response rate 0.71 with 60d notice.
-CAND_0081852,67,0.7076,Senior Data Scientist with 5.9 yrs; strong AI/NLP depth; response rate 0.44 with 45d notice.
-CAND_0000031,68,0.7073,Recommendation Systems Engineer with 6.0 yrs; ex-Uber; response rate 0.91 with 60d notice.
-CAND_0052328,69,0.7072,Recommendation Systems Engineer with 6.5 yrs; ex-Amazon; strong AI/NLP depth; response rate 0.79 with 30d notice.
-CAND_0069248,70,0.7071,AI Research Engineer with 5.4 yrs; strong AI/NLP depth; response rate 0.75 with 120d notice.
-CAND_0050876,71,0.7068,Applied ML Engineer with 6.0 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.67 with 90d notice.
-CAND_0020350,72,0.7067,AI Engineer with 5.8 yrs; strong AI/NLP depth; response rate 0.58 with 30d notice.
-CAND_0043228,73,0.7067,Applied ML Engineer with 6.8 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.41 with 30d notice.
-CAND_0093193,74,0.7063,Senior Machine Learning Engineer with 7.9 yrs; ex-Netflix; response rate 0.61 with 45d notice.
-CAND_0036484,75,0.7057,AI Research Engineer with 5.7 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.80 with 90d notice.
-CAND_0005311,76,0.7055,AI Research Engineer with 5.7 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.29 with 30d notice.
-CAND_0030348,77,0.7055,Machine Learning Engineer with 4.5 yrs; strong AI/NLP depth; response rate 0.54 with 45d notice.
-CAND_0042029,78,0.7041,Senior Data Scientist with 6.5 yrs; strong AI/NLP depth; response rate 0.67 with 45d notice.
-CAND_0072660,79,0.7028,Machine Learning Engineer with 7.1 yrs; strong AI/NLP depth; response rate 0.53 with 30d notice.
-CAND_0002793,80,0.7027,AI Specialist with 5.5 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.77 with 30d notice.
-CAND_0007009,81,0.7026,Recommendation Systems Engineer with 7.9 yrs; ex-Netflix; strong AI/NLP depth; response rate 0.62 with 30d notice.
-CAND_0051292,82,0.7025,Applied ML Engineer with 5.2 yrs; strong AI/NLP depth; response rate 0.52 with 30d notice.
-CAND_0030827,83,0.7023,Senior Data Scientist with 5.4 yrs; strong AI/NLP depth; response rate 0.52 with 120d notice.
-CAND_0008295,84,0.702,AI Research Engineer with 6.5 yrs; strong AI/NLP depth; response rate 0.89 with 45d notice.
-CAND_0003977,85,0.7012,Recommendation Systems Engineer with 4.6 yrs; ex-Google; strong AI/NLP depth; response rate 0.55 with 45d notice.
-CAND_0075439,86,0.7012,Machine Learning Engineer with 4.3 yrs; strong AI/NLP depth; response rate 0.56 with 30d notice.
-CAND_0048265,87,0.7009,AI Research Engineer with 4.3 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.63 with 45d notice.
-CAND_0064326,88,0.7009,Search Engineer with 7.6 yrs; ex-Apple; strong AI/NLP depth; response rate 0.94 with 45d notice.
-CAND_0006418,89,0.7008,Machine Learning Engineer with 5.7 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.92 with 60d notice.
-CAND_0068351,90,0.7008,Lead AI Engineer with 6.4 yrs; ex-Microsoft; strong AI/NLP depth; response rate 0.86 with 0d notice.
-CAND_0029294,91,0.7002,AI Research Engineer with 4.0 yrs; strong AI/NLP depth; response rate 0.34 with 60d notice.
-CAND_0075138,92,0.7,AI Research Engineer with 4.6 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.46 with 60d notice.
-CAND_0028527,93,0.6999,AI Specialist with 5.4 yrs; strong AI/NLP depth; response rate 0.90 with 90d notice.
-CAND_0076251,94,0.6999,Search Engineer with 7.6 yrs; ex-Microsoft; strong AI/NLP depth; response rate 0.51 with 60d notice.
-CAND_0008425,95,0.6998,Senior NLP Engineer with 7.8 yrs; ex-Amazon; strong AI/NLP depth; response rate 0.66 with 90d notice.
-CAND_0018722,96,0.699,Recommendation Systems Engineer with 6.6 yrs; strong AI/NLP depth; response rate 0.79 with 90d notice.
-CAND_0099581,97,0.6986,AI Specialist with 6.4 yrs; strong AI/NLP depth; response rate 0.42 with 120d notice.
-CAND_0057563,98,0.6979,NLP Engineer with 6.8 yrs; Tier-1 education; strong AI/NLP depth; response rate 0.83 with 60d notice.
-CAND_0087744,99,0.6979,Senior Software Engineer (ML) with 3.9 yrs; strong AI/NLP depth; response rate 0.88 with 30d notice.
-CAND_0051630,100,0.6976,Machine Learning Engineer with 6.0 yrs; strong AI/NLP depth; response rate 0.51 with 90d notice.
+CAND_0046064,1,0.7728,Highly recommended Senior NLP Engineer with 8.9 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0002025,2,0.7716,Highly recommended Senior AI Engineer with 5.9 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0081846,3,0.7622,Strong alignment with the required embedding and llm. The 6.7 years of background as a Lead AI Engineer makes them highly relevant.
+CAND_0055905,4,0.7566,Highly recommended Senior Machine Learning Engineer with 8.1 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0068811,5,0.7548,Highly recommended Applied ML Engineer with 8.0 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0077337,6,0.7538,Strong alignment with the required embedding and ranking. The 7.0 years of background as a Staff Machine Learning Engineer makes them highly relevant.
+CAND_0092278,7,0.7525,Highly recommended Senior NLP Engineer with 6.8 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0079387,8,0.75,Highly recommended AI Engineer with 6.9 yrs experience. Their demonstrated expertise in retrieval perfectly matches the job profile.
+CAND_0064904,9,0.747,"Exceptional fit. Brings 4.9 years of experience as a AI Engineer, directly satisfying the JD's need for embedding and ranking."
+CAND_0005260,10,0.7464,Strong alignment with the required embedding and ranking. The 5.2 years of background as a Senior NLP Engineer makes them highly relevant.
+CAND_0071974,11,0.7463,Strong alignment with the required embedding and ranking. The 7.8 years of background as a Senior AI Engineer makes them highly relevant.
+CAND_0094759,12,0.7452,Highly recommended Lead AI Engineer with 8.6 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0028793,13,0.7447,"Exceptional fit. Brings 7.2 years of experience as a Search Engineer, directly satisfying the JD's need for core technical skills."
+CAND_0011687,14,0.7376,Highly recommended Senior NLP Engineer with 7.8 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0018499,15,0.7372,"Exceptional fit. Brings 7.2 years of experience as a Senior Machine Learning Engineer, directly satisfying the JD's need for embedding and llm."
+CAND_0024878,16,0.7369,Strong alignment with the required llm and retrieval. The 5.7 years of background as a AI Specialist makes them highly relevant.
+CAND_0033861,17,0.7354,Strong alignment with the required embedding and llm. The 8.0 years of background as a Senior NLP Engineer makes them highly relevant.
+CAND_0041610,18,0.7347,Strong alignment with the required embedding and retrieval. The 6.7 years of background as a Recommendation Systems Engineer makes them highly relevant.
+CAND_0051004,19,0.7332,Strong alignment with the required embedding and retrieval. The 4.7 years of background as a Senior Data Scientist makes them highly relevant.
+CAND_0062247,20,0.7329,Highly recommended AI Engineer with 7.3 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0087630,21,0.732,Highly recommended AI Engineer with 7.2 yrs experience. Their demonstrated expertise in core technical skills perfectly matches the job profile.
+CAND_0024620,22,0.7319,Highly recommended AI Engineer with 5.9 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0044222,23,0.7315,Strong alignment with the required embedding and retrieval. The 7.7 years of background as a AI Engineer makes them highly relevant.
+CAND_0086022,24,0.7313,Strong alignment with the required embedding and ranking. The 5.3 years of background as a Senior Applied Scientist makes them highly relevant.
+CAND_0079284,25,0.731,Highly recommended Machine Learning Engineer with 4.9 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0012957,26,0.7301,Highly recommended Search Engineer with 4.9 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0007411,27,0.7299,Strong alignment with the required embedding and ranking. The 8.0 years of background as a Senior Machine Learning Engineer makes them highly relevant.
+CAND_0005538,28,0.7286,Highly recommended Senior AI Engineer with 5.9 yrs experience. Their demonstrated expertise in ranking and retrieval perfectly matches the job profile.
+CAND_0011162,29,0.727,Strong alignment with the required embedding and ranking. The 5.8 years of background as a Recommendation Systems Engineer makes them highly relevant.
+CAND_0010257,30,0.7267,"Exceptional fit. Brings 6.5 years of experience as a Senior Data Scientist, directly satisfying the JD's need for embedding and retrieval."
+CAND_0030953,31,0.726,Highly recommended Search Engineer with 7.8 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0037566,32,0.7257,Highly recommended Machine Learning Engineer with 6.9 yrs experience. Their demonstrated expertise in retrieval perfectly matches the job profile.
+CAND_0009024,33,0.7256,Strong alignment with the required embedding and retrieval. The 5.2 years of background as a Search Engineer makes them highly relevant.
+CAND_0065878,34,0.7252,"Exceptional fit. Brings 7.8 years of experience as a Senior Data Scientist, directly satisfying the JD's need for retrieval."
+CAND_0060072,35,0.7251,Highly recommended Staff Machine Learning Engineer with 5.7 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0061265,36,0.7234,Highly recommended Recommendation Systems Engineer with 6.6 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0065195,37,0.7233,"Exceptional fit. Brings 5.1 years of experience as a Search Engineer, directly satisfying the JD's need for embedding and retrieval."
+CAND_0018549,38,0.7231,"Exceptional fit. Brings 6.8 years of experience as a Recommendation Systems Engineer, directly satisfying the JD's need for embedding and retrieval."
+CAND_0093912,39,0.7228,"Exceptional fit. Brings 5.3 years of experience as a Senior Data Scientist, directly satisfying the JD's need for core technical skills."
+CAND_0024466,40,0.7223,"Exceptional fit. Brings 5.2 years of experience as a Search Engineer, directly satisfying the JD's need for embedding and retrieval."
+CAND_0046525,41,0.7206,Strong alignment with the required embedding and ranking. The 6.1 years of background as a Senior Machine Learning Engineer makes them highly relevant.
+CAND_0031593,42,0.7203,Highly recommended Search Engineer with 7.8 yrs experience. Their demonstrated expertise in retrieval perfectly matches the job profile.
+CAND_0099806,43,0.7187,Strong alignment with the required embedding and ranking. The 4.6 years of background as a AI Engineer makes them highly relevant.
+CAND_0083307,44,0.7182,"Exceptional fit. Brings 7.8 years of experience as a Search Engineer, directly satisfying the JD's need for core technical skills."
+CAND_0092706,45,0.7175,"Exceptional fit. Brings 5.8 years of experience as a AI Research Engineer, directly satisfying the JD's need for llm and ranking."
+CAND_0078002,46,0.7168,"Exceptional fit. Brings 6.3 years of experience as a Machine Learning Engineer, directly satisfying the JD's need for core technical skills."
+CAND_0081686,47,0.7157,"Exceptional fit. Brings 6.0 years of experience as a Search Engineer, directly satisfying the JD's need for ranking."
+CAND_0070202,48,0.7155,Highly recommended Machine Learning Engineer with 5.1 yrs experience. Their demonstrated expertise in embedding and ranking perfectly matches the job profile.
+CAND_0088025,49,0.715,"Exceptional fit. Brings 8.6 years of experience as a Staff Machine Learning Engineer, directly satisfying the JD's need for embedding and ranking."
+CAND_0011432,50,0.7149,Highly recommended Senior Data Scientist with 7.6 yrs experience. Their demonstrated expertise in retrieval perfectly matches the job profile.
+CAND_0030031,51,0.7147,Strong alignment with the required ranking. The 5.7 years of background as a AI Engineer makes them highly relevant.
+CAND_0058688,52,0.7146,"Exceptional fit. Brings 6.7 years of experience as a AI Engineer, directly satisfying the JD's need for core technical skills."
+CAND_0009691,53,0.7141,"Exceptional fit. Brings 6.2 years of experience as a Applied ML Engineer, directly satisfying the JD's need for search."
+CAND_0098846,54,0.713,Strong alignment with the required core technical skills. The 7.6 years of background as a AI Engineer makes them highly relevant.
+CAND_0020494,55,0.7128,Highly recommended AI Research Engineer with 5.9 yrs experience. Their demonstrated expertise in llm and ranking perfectly matches the job profile.
+CAND_0059017,56,0.712,Highly recommended AI Research Engineer with 6.8 yrs experience. Their demonstrated expertise in llm and retrieval perfectly matches the job profile.
+CAND_0049896,57,0.7115,"Exceptional fit. Brings 7.3 years of experience as a Search Engineer, directly satisfying the JD's need for retrieval."
+CAND_0060054,58,0.711,"Exceptional fit. Brings 6.4 years of experience as a AI Engineer, directly satisfying the JD's need for core technical skills."
+CAND_0014440,59,0.7103,Strong alignment with the required embedding and retrieval. The 6.4 years of background as a Recommendation Systems Engineer makes them highly relevant.
+CAND_0015578,60,0.7103,Highly recommended AI Engineer with 5.4 yrs experience. Their demonstrated expertise in ranking perfectly matches the job profile.
+CAND_0006567,61,0.7096,Highly recommended Senior AI Engineer with 7.9 yrs experience. Their demonstrated expertise in ranking and retrieval perfectly matches the job profile.
+CAND_0066999,62,0.7096,Highly recommended Recommendation Systems Engineer with 5.9 yrs experience. Their demonstrated expertise in ranking perfectly matches the job profile.
+CAND_0039838,63,0.7094,Highly recommended Recommendation Systems Engineer with 4.9 yrs experience. Their demonstrated expertise in search perfectly matches the job profile.
+CAND_0051615,64,0.7087,Highly recommended Search Engineer with 4.6 yrs experience. Their demonstrated expertise in core technical skills perfectly matches the job profile.
+CAND_0041669,65,0.7083,Strong alignment with the required ranking. The 8.0 years of background as a Recommendation Systems Engineer makes them highly relevant.
+CAND_0062413,66,0.7078,"Exceptional fit. Brings 6.6 years of experience as a AI Research Engineer, directly satisfying the JD's need for core technical skills."
+CAND_0081852,67,0.7076,Highly recommended Senior Data Scientist with 5.9 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0000031,68,0.7073,Strong alignment with the required embedding and retrieval. The 6.0 years of background as a Recommendation Systems Engineer makes them highly relevant.
+CAND_0052328,69,0.7072,Strong alignment with the required ranking. The 6.5 years of background as a Recommendation Systems Engineer makes them highly relevant.
+CAND_0069248,70,0.7071,"Exceptional fit. Brings 5.4 years of experience as a AI Research Engineer, directly satisfying the JD's need for core technical skills."
+CAND_0050876,71,0.7068,Highly recommended Applied ML Engineer with 6.0 yrs experience. Their demonstrated expertise in core technical skills perfectly matches the job profile.
+CAND_0020350,72,0.7067,"Exceptional fit. Brings 5.8 years of experience as a AI Engineer, directly satisfying the JD's need for retrieval."
+CAND_0043228,73,0.7067,"Exceptional fit. Brings 6.8 years of experience as a Applied ML Engineer, directly satisfying the JD's need for retrieval and search."
+CAND_0093193,74,0.7063,"Exceptional fit. Brings 7.9 years of experience as a Senior Machine Learning Engineer, directly satisfying the JD's need for ranking and retrieval."
+CAND_0036484,75,0.7057,Strong alignment with the required llm and retrieval. The 5.7 years of background as a AI Research Engineer makes them highly relevant.
+CAND_0005311,76,0.7055,"Exceptional fit. Brings 5.7 years of experience as a AI Research Engineer, directly satisfying the JD's need for llm and ranking."
+CAND_0030348,77,0.7055,Strong alignment with the required embedding and retrieval. The 4.5 years of background as a Machine Learning Engineer makes them highly relevant.
+CAND_0042029,78,0.7041,Strong alignment with the required search. The 6.5 years of background as a Senior Data Scientist makes them highly relevant.
+CAND_0072660,79,0.7028,Highly recommended Machine Learning Engineer with 7.1 yrs experience. Their demonstrated expertise in ranking and search perfectly matches the job profile.
+CAND_0002793,80,0.7027,Highly recommended AI Specialist with 5.5 yrs experience. Their demonstrated expertise in llm and retrieval perfectly matches the job profile.
+CAND_0007009,81,0.7026,Highly recommended Recommendation Systems Engineer with 7.9 yrs experience. Their demonstrated expertise in core technical skills perfectly matches the job profile.
+CAND_0051292,82,0.7025,Strong alignment with the required ranking. The 5.2 years of background as a Applied ML Engineer makes them highly relevant.
+CAND_0030827,83,0.7023,Strong alignment with the required embedding and ranking. The 5.4 years of background as a Senior Data Scientist makes them highly relevant.
+CAND_0008295,84,0.702,Strong alignment with the required llm and ranking. The 6.5 years of background as a AI Research Engineer makes them highly relevant.
+CAND_0003977,85,0.7012,Highly recommended Recommendation Systems Engineer with 4.6 yrs experience. Their demonstrated expertise in embedding and retrieval perfectly matches the job profile.
+CAND_0075439,86,0.7012,Highly recommended Machine Learning Engineer with 4.3 yrs experience. Their demonstrated expertise in retrieval perfectly matches the job profile.
+CAND_0048265,87,0.7009,Highly recommended AI Research Engineer with 4.3 yrs experience. Their demonstrated expertise in llm and retrieval perfectly matches the job profile.
+CAND_0064326,88,0.7009,"Exceptional fit. Brings 7.6 years of experience as a Search Engineer, directly satisfying the JD's need for ranking."
+CAND_0006418,89,0.7008,Highly recommended Machine Learning Engineer with 5.7 yrs experience. Their demonstrated expertise in core technical skills perfectly matches the job profile.
+CAND_0068351,90,0.7008,Highly recommended Lead AI Engineer with 6.4 yrs experience. Their demonstrated expertise in ranking and retrieval perfectly matches the job profile.
+CAND_0029294,91,0.7002,"Exceptional fit. Brings 4.0 years of experience as a AI Research Engineer, directly satisfying the JD's need for llm and ranking."
+CAND_0075138,92,0.7,"While they have 4.6 years of experience, they lack deep background in embedding and embeddings. Still a viable AI Research Engineer based on general engineering capability."
+CAND_0028527,93,0.6999,"Passable candidate with 5.4 years as a AI Specialist. They cover llm and ranking, but there are some concerns regarding their exposure to embedding and embeddings."
+CAND_0076251,94,0.6999,"Moderate fit. Shows competence in embedding and retrieval, however the 7.6 years of experience falls slightly short of an ideal profile needing embeddings and hybrid search."
+CAND_0008425,95,0.6998,"Passable candidate with 7.8 years as a Senior NLP Engineer. They cover embedding and ranking, but there are some concerns regarding their exposure to embeddings and hybrid search."
+CAND_0018722,96,0.699,"Moderate fit. Shows competence in embedding and retrieval, however the 6.6 years of experience falls slightly short of an ideal profile needing embeddings and hybrid search."
+CAND_0099581,97,0.6986,"Passable candidate with 6.4 years as a AI Specialist. They cover llm and ranking, but there are some concerns regarding their exposure to embedding and embeddings."
+CAND_0057563,98,0.6979,"Moderate fit. Shows competence in retrieval and search, however the 6.8 years of experience falls slightly short of an ideal profile needing embedding and embeddings."
+CAND_0087744,99,0.6979,"While they have 3.9 years of experience, they lack deep background in embedding and embeddings. Still a viable Senior Software Engineer (ML) based on general engineering capability."
+CAND_0051630,100,0.6976,"Moderate fit. Shows competence in core technical skills, however the 6.0 years of experience falls slightly short of an ideal profile needing embedding and embeddings."
