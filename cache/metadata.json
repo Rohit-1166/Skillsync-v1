@@ -1,0 +1,7 @@
+{
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "embedding_dimension": 384,
+    "candidate_count": 100000,
+    "created_at": "2026-06-16 17:28:38",
+    "version": "1.0"
+}
