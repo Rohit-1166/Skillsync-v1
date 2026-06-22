@@ -6,6 +6,7 @@
 ![Offline Execution](https://img.shields.io/badge/Execution-100%25_Offline-red)
 ![Tests](https://img.shields.io/badge/Tests-100%25_Passing-brightgreen)
 
+
 SkillSync is a production-grade, offline candidate discovery and hybrid ranking system built for the **India Runs Hackathon 2026 (AI Recruitment Intelligence Track)**. It is designed to match a massive pool of 100,000 candidates against a target Job Description with extreme accuracy, explainability, and speed, satisfying strict resource boundaries.
 
 ---
