@@ -74,6 +74,16 @@ SkillSync-v1/
 
 ## 🔌 Setup & Local Installation
 
+### ⚠️ Important Notice for Hackathon Judges (Git LFS)
+This repository uses **Git LFS (Large File Storage)** to store the pre-computed offline ML models, the FAISS cache (`cache/`), and the 100k candidate dataset (`data/candidates.jsonl`). 
+When you run `git clone`, Git LFS will automatically download these files (approx. 750MB total). This trades hours of CPU computation for a 1-2 minute network download, allowing the pipeline to execute in under **5 seconds**.
+
+If you do not have Git LFS installed on your machine, please install it first:
+```bash
+git lfs install
+git clone https://github.com/Rohit-1166/Skillsync-v1.git
+```
+
 ### Prerequisites
 - Python 3.11+
 - Virtual environment (recommended)
