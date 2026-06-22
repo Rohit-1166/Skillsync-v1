@@ -17,7 +17,6 @@ ENV/
 scratch/
 
 # Large candidate database (prevents Git push crashes as file is > 400MB)
-data/candidates.jsonl
 
 # Team interview prep sheets & history automation guides (must remain private)
 PREPARATION_README.md
