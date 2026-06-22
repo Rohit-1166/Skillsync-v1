@@ -1,5 +1,10 @@
 # SkillSync — AI Recruitment Discovery & Ranking Engine
 
+> [!IMPORTANT]
+> **🚀 One-Click Sandbox & Interactive Web UI (Google Colab)**  
+> Execute the complete candidate matching pipeline, reproduce the `submission.csv` results, and **instantly deploy the interactive web dashboard** on Google's cloud server.  
+> **👉 [OPEN THE INTERACTIVE SANDBOX IN GOOGLE COLAB](https://colab.research.google.com/github/Rohit-1166/Skillsync-v1/blob/main/Sandbox.ipynb) 👈**
+
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-green)
 ![FAISS](https://img.shields.io/badge/FAISS-CPU-yellow)
