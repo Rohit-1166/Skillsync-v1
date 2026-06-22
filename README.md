@@ -45,6 +45,7 @@ SkillSync-v1/
 │   ├── companies.py            # Tiered tech company brand database
 │   ├── industries.py           # Industry relevance scoring dictionary
 │   └── capabilities.py         # Recruiter skill-to-capability aliases
+├── model/                      # Offline BGE-small-en-v1.5 embedding weights
 ├── models/
 │   ├── candidate.py            # Dataclasses for parsed profiles
 │   ├── job_description.py      # Dataclasses for parsed JDs
@@ -106,6 +107,7 @@ git clone https://github.com/Rohit-1166/Skillsync-v1.git
    ```bash
    pip install -r requirements.txt
    ```
+   *(Note: This uses a highly optimized CPU-only PyTorch build to keep the setup footprint under 150MB and prevent paging file crashes on hackathon laptops).*
 
 ---
 
@@ -147,18 +149,24 @@ This produces the profiling report at [output/evaluation_report.md](file:///c:/U
 
 ---
 
-## 🌐 FastAPI REST Service Usage
+## 🌐 Interactive Web UI & API Service
 
-SkillSync provides a hosted API server to query candidate discoverability dynamically.
+SkillSync provides a fully interactive Web Dashboard and hosted API server to query candidate discoverability dynamically.
 
-### Start the Server:
+### Start the Dashboard Server:
 ```bash
 python -m uvicorn api.app:app --host 127.0.0.1 --port 8000
 ```
+Then, open your browser and navigate to: **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
 
-### Endpoints Available:
+### Dashboard Features:
+- **Visual Radar Charts:** See candidate skill distributions mapped against the Job Description.
+- **Dynamic Semantic Highlighting:** See exactly which resume skills semantically matched the required capabilities.
+- **Explainable AI:** Read plain-english AI reasoning for why a candidate was ranked.
+
+### API Endpoints Available:
+- **`GET /`**: Serves the Interactive Dashboard UI.
 - **`GET /health`**: Returns system health status and cache metadata.
 - **`POST /rank/text`**: Takes Job Description raw text and returns ranked candidate lists.
 - **`POST /rank/pdf`**: Takes an uploaded Job Description PDF file and returns ranked candidate lists.
 - **`GET /candidate/{candidate_id}/explain`**: Returns the recruiter explainability report in Markdown or JSON format.
-  - Query parameters: `format=json` or `format=markdown`.
