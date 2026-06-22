@@ -61,12 +61,32 @@ class FeatureEngineer:
             0.50 * features.experience_fit_score
         )
 
+        # Get github activity and assessment scores from recruiter signals
+        signals = candidate.signals
+        if isinstance(signals, list):
+            signal = signals[0] if signals else None
+        else:
+            signal = signals
+
+        github_score = 0.5
+        assessment_score = 0.5
+
+        if signal:
+            if signal.github_activity_score >= 0:
+                github_score = signal.github_activity_score / 100.0
+            
+            assessments = signal.skill_assessment_scores
+            if assessments:
+                assessment_score = sum(assessments.values()) / (len(assessments) * 100.0)
+
         # 25% weight in final features
         features.skill_match_score = (
-            0.50 * features.required_skills_match +
-            0.20 * features.preferred_skills_match +
+            0.40 * features.required_skills_match +
+            0.15 * features.preferred_skills_match +
             0.15 * features.ai_technical_depth +
-            0.15 * features.backend_technical_depth
+            0.10 * features.backend_technical_depth +
+            0.10 * github_score +
+            0.10 * assessment_score
         )
 
         # 20% weight in final features
@@ -362,7 +382,13 @@ class FeatureEngineer:
         if not signal:
             return 0.5
 
-        return signal.profile_completeness_score / 100.0
+        completeness = signal.profile_completeness_score / 100.0
+
+        # Calculate a trust verification score (average of email, phone, and linkedin)
+        verifications = [signal.verified_email, signal.verified_phone, signal.linkedin_connected]
+        trust_score = sum(1.0 for v in verifications if v) / len(verifications)
+
+        return 0.7 * completeness + 0.3 * trust_score
 
     def _recruiter_interest_score(self, candidate: Candidate) -> float:
         signals = candidate.signals
@@ -389,7 +415,14 @@ class FeatureEngineer:
         # Log scaling saves count (cap at 20 saves)
         saves = min(1.0, np.log1p(signal.saved_by_recruiters_30d) / np.log1p(20))
 
-        return 0.3 * views + 0.3 * apps + 0.4 * saves
+        interest_score = 0.3 * views + 0.3 * apps + 0.4 * saves
+
+        # Add open to work and applications submitted signals
+        open_to_work_bonus = 0.2 if signal.open_to_work_flag else 0.0
+        apps_submitted = min(1.0, np.log1p(signal.applications_submitted_30d) / np.log1p(30))
+        activity_score = 0.5 * open_to_work_bonus + 0.5 * apps_submitted
+
+        return min(1.0, 0.8 * interest_score + 0.2 * activity_score)
 
     def _candidate_responsiveness_score(self, candidate: Candidate) -> float:
         signals = candidate.signals
@@ -408,8 +441,16 @@ class FeatureEngineer:
         # Fast response (within 24 hours) yields 1.0, degrading linearly to 48 hours
         time_score = max(0.0, min(1.0, 1.0 - (time_hours / 48.0)))
 
-        # Balance response reliability and response speed equally.
-        return 0.5 * rate + 0.5 * time_score
+        responsiveness = 0.5 * rate + 0.5 * time_score
+
+        # Interview completion rate (0.0 to 1.0)
+        completion_rate = signal.interview_completion_rate
+        # Offer acceptance rate (-1 means no prior offers, default to 0.5)
+        acceptance_rate = signal.offer_acceptance_rate if signal.offer_acceptance_rate >= 0 else 0.5
+
+        engagement = 0.5 * completion_rate + 0.5 * acceptance_rate
+
+        return 0.7 * responsiveness + 0.3 * engagement
 
     def _notice_period_score(self, candidate: Candidate) -> float:
         signals = candidate.signals

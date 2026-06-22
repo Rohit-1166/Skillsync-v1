@@ -387,8 +387,16 @@ def explain_candidate(
                 "notice_period_days": candidate.signals.notice_period_days,
                 "preferred_work_mode": candidate.signals.preferred_work_mode,
                 "willing_to_relocate": candidate.signals.willing_to_relocate,
-                "profile_completeness_score":
-                    candidate.signals.profile_completeness_score
+                "profile_completeness_score": candidate.signals.profile_completeness_score,
+                "github_activity_score": candidate.signals.github_activity_score,
+                "recruiter_response_rate": candidate.signals.recruiter_response_rate,
+                "avg_response_time_hours": candidate.signals.avg_response_time_hours,
+                "interview_completion_rate": candidate.signals.interview_completion_rate,
+                "offer_acceptance_rate": candidate.signals.offer_acceptance_rate,
+                "open_to_work_flag": candidate.signals.open_to_work_flag,
+                "verified_email": candidate.signals.verified_email,
+                "verified_phone": candidate.signals.verified_phone,
+                "linkedin_connected": candidate.signals.linkedin_connected
             }
         }
 
