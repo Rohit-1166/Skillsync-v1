@@ -189,11 +189,9 @@ class FeatureEngineer:
 
         return matched / len(jd.required_skills)
 
-       
-        # Preferred skills contribute to ranking but are not treated
-        # as strict requirements like required skills.
-        def _preferred_skills_match(self, candidate: Candidate, jd: JobDescription) -> float:
-            c_skills = {s.name.lower() for s in candidate.skills}
+    def _preferred_skills_match(self, candidate: Candidate, jd: JobDescription) -> float:
+        c_skills = {s.name.lower() for s in candidate.skills}
+
         if not jd.preferred_skills:
             return 1.0
 

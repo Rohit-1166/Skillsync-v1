@@ -14,7 +14,7 @@ from fastapi import FastAPI, UploadFile, File, Query, HTTPException, Form
 from fastapi.responses import PlainTextResponse, JSONResponse, HTMLResponse
 from pydantic import BaseModel
 
-from config.settings import JD_FILE
+from config.settings import JD_FILE 
 from parser.jd_parser import JDParser
 from embeddings.embedding_pipeline import EmbeddingPipeline
 from ranking.hybrid_ranker import HybridRanker
