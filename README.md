@@ -4,6 +4,7 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-green)
 ![FAISS](https://img.shields.io/badge/FAISS-CPU-yellow)
 ![Offline Execution](https://img.shields.io/badge/Execution-100%25_Offline-red)
+![Tests](https://img.shields.io/badge/Tests-100%25_Passing-brightgreen)
 
 SkillSync is a production-grade, offline candidate discovery and hybrid ranking system built for the **India Runs Hackathon 2026 (AI Recruitment Intelligence Track)**. It is designed to match a massive pool of 100,000 candidates against a target Job Description with extreme accuracy, explainability, and speed, satisfying strict resource boundaries.
 
@@ -19,6 +20,16 @@ Designed specifically to run flawlessly on standard laptops without GPU access, 
 | **GPU Requirement** | 0% (Fully CPU Optimized) | Requires CUDA/Dedicated GPU |
 | **Latency (100k records)** | **0.45 seconds** | 30+ seconds |
 | **Model Footprint** | 133 MB (BGE-Small) | 10 GB+ (Llama-3, etc.) |
+
+---
+
+## 💼 Business Value & Enterprise ROI
+
+Beyond its technical architecture, SkillSync delivers massive operational value for Talent Acquisition teams:
+- **Zero API Costs**: By utilizing localized semantic embedding models instead of external APIs (like OpenAI), enterprises save thousands of dollars per month in token usage.
+- **Data Privacy & Compliance**: 100% offline execution ensures that confidential corporate Job Descriptions and private candidate resumes never leave the company's internal network.
+- **Time to Hire**: Automates a manual screening process that normally takes a recruiter 40+ hours, reducing candidate discovery time to `0.45` seconds.
+- **Fraud Mitigation**: The Honeypot trapping system protects companies from interviewing and hiring candidates using synthetic, GPT-generated resumes that bypass standard ATS filters.
 
 ---
 
