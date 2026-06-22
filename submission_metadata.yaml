@@ -8,9 +8,9 @@
 team_name: "Rohit-1166"
 
 primary_contact:
-  name: "Rohit"
-  email: "rohit@example.com"
-  phone: "+91-9999999999"
+  name: "Rohit Kumar"
+  email: "11.rohitkumar.66@gmail.com"
+  phone: "+91-9572091895"
 
 team_members:
   - name: "arjunkumar24b"
@@ -57,7 +57,7 @@ ai_tools_used:
   - "Cursor"
 
 ai_usage_summary: |
-  Used Claude for architecture design, debugging python errors, and structuring the candidate explainability report. No candidate data was sent to any LLM.
+  AI tools (specifically Cursor/Claude) were utilized as an iterative pair-programming assistant during development. The human team designed the multi-stage hybrid ranking architecture, the 20 recruiter-inspired feature scoring weights, and the TimelineConsistencyAnalyzer to catch synthetic honeypot resumes. The AI was used for generating unittest boilerplate, optimizing Python loop execution, and debugging environment setup issues (specifically, torchvision dependency conflicts in Google Colab). Also the frontend dashboard(api/static) was generated using AI by user-given prompts.
 
 # ============================================================================
 # Approach summary (optional but recommended)
