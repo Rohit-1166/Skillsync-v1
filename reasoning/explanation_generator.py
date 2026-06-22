@@ -32,9 +32,33 @@ class ExplanationGenerator:
         exp = candidate.profile.years_of_experience
         score = features.final_score
         
-        # 2. Extract JD connections
-        matched_skills = [s for s in jd.required_skills if s.lower() in candidate.profile.summary.lower()]
-        missing_skills = [s for s in jd.required_skills if s.lower() not in candidate.profile.summary.lower()]
+        # 2. Extract JD connections using semantic capability matching
+        c_skills = [s.name.lower() for s in candidate.skills]
+        
+        def is_semantic_match(jd_skill):
+            jd_lower = jd_skill.lower().strip()
+            # 1. Direct or substring match
+            for cs in c_skills:
+                if cs == jd_lower or jd_lower in cs or cs in jd_lower:
+                    return True
+            # 2. Category mapping
+            CAPABILITY_MAP = {
+                "retrieval": ["retrieval", "information retrieval", "search", "semantic search", "vector search", "hybrid search", "dense retrieval", "faiss", "milvus", "pinecone", "chromadb", "weaviate", "bm25", "elastic", "elasticsearch"],
+                "embeddings": ["embedding", "embeddings", "sentence transformers", "bge", "e5", "bert", "embedding model"],
+                "ranking": ["ranking", "reranking", "learning to rank", "recommendation", "recommender", "search ranking", "relevance", "ltr"],
+                "llm": ["llm", "large language model", "foundation model", "rag", "langchain", "llamaindex", "prompt engineering", "agents", "lora", "peft", "fine tuning", "fine-tuning"],
+                "backend": ["backend", "backend engineering", "python", "fastapi", "flask", "django", "rest api", "microservices", "docker", "kubernetes"]
+            }
+            for cat, words in CAPABILITY_MAP.items():
+                if jd_lower in words or cat == jd_lower:
+                    # check if candidate has any word in this category
+                    for cs in c_skills:
+                        if cs in words or cs == cat:
+                            return True
+            return False
+
+        matched_skills = [s for s in jd.required_skills if is_semantic_match(s)]
+        missing_skills = [s for s in jd.required_skills if not is_semantic_match(s)]
         
         matched_str = " and ".join(matched_skills[:2]) if matched_skills else "core technical skills"
         missing_str = " and ".join(missing_skills[:2]) if missing_skills else "certain domain requirements"
