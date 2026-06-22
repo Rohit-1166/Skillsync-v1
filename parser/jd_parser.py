@@ -155,7 +155,9 @@ class JDParser:
             for word in capability["aliases"]:
 
                 if word.lower() in self.text:
-                    skills.append(word)
+                    # Standardize singular/plural embedding term to "embeddings"
+                    standardized = "embeddings" if word.lower() == "embedding" else word
+                    skills.append(standardized)
 
         # Deduplication and sorting ensure consistent skill lists
         # across JDs for stable downstream comparisons.
