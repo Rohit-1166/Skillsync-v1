@@ -172,13 +172,59 @@ class FeatureEngineer:
 
         return stats["stability_score"]
 
+    def _find_semantic_match(self, jd_skill_name: str, c_skills: set[str]) -> bool:
+        jd_lower = jd_skill_name.lower().strip()
+        
+        # 1. Direct or substring match
+        for cs in c_skills:
+            if cs == jd_lower or jd_lower in cs or cs in jd_lower:
+                return True
+                
+        # 2. Map JD skill name to capability category
+        CAPABILITY_MAP = {
+            "retrieval": {
+                "aliases": ["retrieval", "information retrieval", "search", "semantic search", "vector search", "hybrid search", "dense retrieval"],
+                "evidence": ["faiss", "milvus", "pinecone", "chromadb", "weaviate", "bm25", "elastic", "elasticsearch"]
+            },
+            "embeddings": {
+                "aliases": ["embedding", "embeddings"],
+                "evidence": ["sentence transformers", "bge", "e5", "bert", "embedding model"]
+            },
+            "ranking": {
+                "aliases": ["ranking", "reranking", "learning to rank"],
+                "evidence": ["recommendation", "recommender", "search ranking", "relevance", "ltr"]
+            },
+            "llm": {
+                "aliases": ["llm", "large language model", "foundation model"],
+                "evidence": ["rag", "langchain", "llamaindex", "prompt engineering", "agents", "lora", "peft", "fine tuning", "fine-tuning"]
+            },
+            "backend": {
+                "aliases": ["backend", "backend engineering"],
+                "evidence": ["python", "fastapi", "flask", "django", "rest api", "microservices", "docker", "kubernetes"]
+            }
+        }
+        
+        jd_category = None
+        for cat, mapping in CAPABILITY_MAP.items():
+            if cat == jd_lower or jd_lower in mapping["aliases"] or jd_lower in mapping["evidence"]:
+                jd_category = cat
+                break
+                
+        if jd_category:
+            mapping = CAPABILITY_MAP[jd_category]
+            for cs in c_skills:
+                if cs == jd_category or cs in mapping["aliases"] or cs in mapping["evidence"]:
+                    return True
+                    
+        return False
+
     def _required_skills_match(self, candidate: Candidate, jd: JobDescription) -> float:
         c_skills = {s.name.lower() for s in candidate.skills}
 
         if not jd.required_skills:
             return 1.0
 
-        matched = sum(1 for s in jd.required_skills if s.lower() in c_skills)
+        matched = sum(1 for s in jd.required_skills if self._find_semantic_match(s, c_skills))
 
         return matched / len(jd.required_skills)
 
@@ -188,7 +234,7 @@ class FeatureEngineer:
         if not jd.preferred_skills:
             return 1.0
 
-        matched = sum(1 for s in jd.preferred_skills if s.lower() in c_skills)
+        matched = sum(1 for s in jd.preferred_skills if self._find_semantic_match(s, c_skills))
         return matched / len(jd.preferred_skills)
 
     def _ai_technical_depth(self, candidate: Candidate) -> float:

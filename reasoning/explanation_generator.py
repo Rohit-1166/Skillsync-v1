@@ -88,11 +88,11 @@ class ExplanationGenerator:
         # Recommendation level thresholds mirror the API response labels
         # so the markdown report and JSON output stay consistent.
         score = features.final_score
-        if score >= 0.70:
+        if score >= 0.74:
             rec_level = "🟢 STRONG MATCH"
-        elif score >= 0.60:
+        elif score >= 0.68:
             rec_level = "🔵 GOOD MATCH"
-        elif score >= 0.50:
+        elif score >= 0.60:
             rec_level = "🟡 MARGINAL MATCH"
         else:
             rec_level = "🔴 UNALIGNED"

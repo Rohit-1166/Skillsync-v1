@@ -407,9 +407,9 @@ def explain_candidate(
 
             # Human-readable recommendation derived from the final score.
             "recommendation_level":
-                "STRONG MATCH" if hybrid_score >= 0.70
-                else "GOOD MATCH" if hybrid_score >= 0.60
-                else "MARGINAL MATCH" if hybrid_score >= 0.50
+                "STRONG MATCH" if hybrid_score >= 0.74
+                else "GOOD MATCH" if hybrid_score >= 0.68
+                else "MARGINAL MATCH" if hybrid_score >= 0.60
                 else "UNALIGNED",
 
             "report_markdown": report,
