@@ -251,6 +251,8 @@ git lfs install
 git clone https://github.com/Rohit-1166/Skillsync-v1.git
 ```
 
+> **Dual-Mode Extraction (Google Colab):** We have implemented a graceful fallback architecture in our interactive Sandbox. If GitHub LFS fails due to repository bandwidth limits, the Sandbox automatically detects the failure and routes the downloads through a secondary high-speed Google Drive CDN, ensuring a flawless execution.
+
 **Troubleshooting: `OSError: Error no file named model.safetensors`**  
 If you cloned the repository *before* installing Git LFS, your machine only downloaded tiny 133-byte text "pointer files" instead of the actual 133MB model. To fix this instantly, simply run:
 ```bash
