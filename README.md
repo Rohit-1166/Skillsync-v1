@@ -1,9 +1,9 @@
 # SkillSync — AI Recruitment Discovery & Ranking Engine
 
 > [!IMPORTANT]
-> **🚀 One-Click Sandbox & Interactive Web UI (Google Colab)**  
+> **One-Click Sandbox & Interactive Web UI (Google Colab)**  
 > Execute the complete candidate matching pipeline, reproduce the `submission.csv` results, and **instantly deploy the interactive web dashboard** on Google's cloud server.  
-> **👉 [OPEN THE INTERACTIVE SANDBOX IN GOOGLE COLAB](https://colab.research.google.com/github/Rohit-1166/Skillsync-v1/blob/main/Sandbox.ipynb) 👈**
+> **[OPEN THE INTERACTIVE SANDBOX IN GOOGLE COLAB](https://colab.research.google.com/github/Rohit-1166/Skillsync-v1/blob/main/Sandbox.ipynb)**
 
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-green)
@@ -16,7 +16,7 @@ SkillSync is a production-grade, offline candidate discovery and hybrid ranking 
 
 ---
 
-## ⚡ Performance & Hardware Footprint
+## Performance & Hardware Footprint
 
 Designed specifically to run flawlessly on standard laptops without GPU access, SkillSync dramatically reduces resource overhead:
 
@@ -29,7 +29,7 @@ Designed specifically to run flawlessly on standard laptops without GPU access, 
 
 ---
 
-## 💼 Business Value & Enterprise ROI
+## Business Value & Enterprise ROI
 
 Beyond its technical architecture, SkillSync delivers massive operational value for Talent Acquisition teams:
 - **Zero API Costs**: By utilizing localized semantic embedding models instead of external APIs (like OpenAI), enterprises save thousands of dollars per month in token usage.
@@ -39,7 +39,7 @@ Beyond its technical architecture, SkillSync delivers massive operational value 
 
 ---
 
-## 📸 Interactive Dashboard
+## Interactive Dashboard
 
 SkillSync features a beautiful interactive UI to visualize matches, view dynamic radar charts, and export outreach emails.
 
@@ -47,7 +47,7 @@ SkillSync features a beautiful interactive UI to visualize matches, view dynamic
 
 ---
 
-## 🚀 Key Differences & Architectural Innovations
+## Key Differences & Architectural Innovations
 
 Compared to standard keyword-matching or plain vector-embedding search engines, SkillSync introduces six major innovations designed for high-scale, secure, and accurate recruitment:
 
@@ -73,7 +73,7 @@ Compared to standard keyword-matching or plain vector-embedding search engines, 
 
 ---
 
-## 🏗️ High-Level System Architecture
+## High-Level System Architecture
 
 ```mermaid
 graph TD
@@ -176,12 +176,13 @@ graph TD
 
 ---
 
-## 🛠️ Folder Structure & Architecture
+## Folder Structure & Architecture
 
 ```
 SkillSync-v1/
 ├── api/
-│   └── app.py                  # Production FastAPI service with matching & explainability endpoints
+│   ├── app.py                  # Production FastAPI service with matching & explainability endpoints
+│   └── static/                 # Frontend dashboard static assets (HTML/CSS/JS)
 ├── cache/                      # Flat cache for FAISS index and candidate embeddings
 ├── config/
 │   ├── settings.py             # Global settings (model, paths, thresholds)
@@ -200,6 +201,7 @@ SkillSync-v1/
 │   ├── companies.py            # Tiered tech company brand database
 │   ├── industries.py           # Industry relevance scoring dictionary
 │   └── capabilities.py         # Recruiter skill-to-capability aliases
+├── logs/                       # Application execution and error logs
 ├── model/                      # Offline BGE-small-en-v1.5 embedding weights
 ├── models/
 │   ├── candidate.py            # Dataclasses for parsed profiles
@@ -213,24 +215,33 @@ SkillSync-v1/
 │   ├── candidate_parser.py     # Streaming JSONL reader and mapper
 │   └── jd_parser.py            # Factual Job Description parser
 ├── ranking/
-│   └── hybrid_ranker.py        # 60% semantic + 40% feature hybrid ranker (with honeypot filters)
+│   ├── hybrid_ranker.py        # 60% semantic + 40% feature hybrid ranker (with honeypot filters)
+│   └── semantic_ranker.py      # Core semantic vector search logic
+├── reasoning/
+│   └── explanation_generator.py # Explainable AI logic for candidate matching
+├── retrieval/
+│   └── faiss_index.py          # Vector database indexing and retrieval
 ├── submission/
 │   ├── submission_writer.py    # Formatter for CSV submission
 │   └── debug_submission_writer.py # Formatter for detailed CSV debug metrics
 ├── tests/                      # Python unittest suite
+├── utils/
+│   ├── document_reader.py      # PDF parsing utility
+│   └── logger.py               # Centralized logging configuration
 ├── evaluation.py               # Profiling and statistics engine
 ├── main.py                     # Command-line entrypoint to run matcher pipeline
 ├── run_tests.py                # Automated unit test suite runner
 ├── submission.csv              # Monotonically ranked final output (validated)
 ├── debug_submission.csv        # Diagnostic spreadsheet with feature component columns
-└── submission_metadata.yaml    # Hackathon portal submission metadata file
+├── submission_metadata.yaml    # Hackathon portal submission metadata file
+└── Sandbox.ipynb               # Interactive UI testing and execution notebook
 ```
 
 ---
 
-## 🔌 Setup & Local Installation
+## Setup & Local Installation
 
-### ⚠️ Important Notice for Hackathon Judges (Git LFS)
+### Important Notice for Hackathon Judges (Git LFS)
 This repository uses **Git LFS (Large File Storage)** to store the pre-computed offline ML models, the FAISS cache (`cache/`), and the 100k candidate dataset (`data/candidates.jsonl`). 
 When you run `git clone`, Git LFS will automatically download these files (approx. 750MB total). This trades hours of CPU computation for a 1-2 minute network download, allowing the pipeline to execute in under **5 seconds**.
 
@@ -273,7 +284,7 @@ git lfs pull
 
 ---
 
-## 🏃 Code Reproduction (Running the Pipeline)
+## Code Reproduction (Running the Pipeline)
 
 **Pre-computation Documentation:**  
 To meet strict performance requirements, we utilize pre-computation to handle the massive 100,000-candidate dataset. The candidate parsing, semantic embedding via `BGE-small-en-v1.5`, and FAISS indexing have already been pre-computed. The resulting artifacts (`cache/embeddings.npy` and `cache/faiss_index.bin`) are tracked via Git LFS. **The ranking step below only performs query embedding, retrieval, feature extraction, and CSV generation, executing in just 0.45 seconds.**
@@ -293,7 +304,7 @@ This single command:
 
 ---
 
-## 🧪 Running the Test Suite
+## Running the Test Suite
 
 We use Python's built-in `unittest` framework. To run the automated test suite and check components:
 ```bash
@@ -302,7 +313,7 @@ python run_tests.py
 
 ---
 
-## 📊 Evaluation & Latency Profile
+## Evaluation & Latency Profile
 
 To profile execution times, score distribution, and run feature correctness tests:
 ```bash
@@ -312,11 +323,11 @@ This produces the profiling report at [output/evaluation_report.md](file:///c:/U
 - **Total LATENCY**: **`0.4545 seconds`** for complete query matching on 100k candidates.
 - **Honeypot Filter**: Flagged and skipped 67 impossible candidates in data stream.
 - **Score Range**: Matches range from `0.55` to `0.77` with a standard deviation of `0.046`.
-- **Normalization Bounds**: 🟢 100% PASS (all features lie strictly in `[0.0, 1.0]`).
+- **Normalization Bounds**: 100% PASS (all features lie strictly in `[0.0, 1.0]`).
 
 ---
 
-## 🌐 Interactive Web UI & API Service
+## Interactive Web UI & API Service
 
 SkillSync provides a fully interactive Web Dashboard and hosted API server to query candidate discoverability dynamically.
 
