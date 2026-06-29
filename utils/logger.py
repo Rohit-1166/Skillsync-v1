@@ -65,9 +65,9 @@ class CleanConsoleFormatter(logging.Formatter):
     def format(self, record):
         msg = record.getMessage()
         if record.levelno >= logging.ERROR:
-            return f"❌ Error: {msg}"
-        elif record.levelno >= logging.WARNING:
-            return f"⚠️ Warning: {msg}"
+            return f"[ERROR] {msg}"
+        elif record.levelno == logging.WARNING:
+            return f"[WARNING] {msg}"
         else:
             return f"{msg}"
 

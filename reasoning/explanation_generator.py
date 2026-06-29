@@ -151,13 +151,13 @@ class ExplanationGenerator:
         # so the markdown report and JSON output stay consistent.
         score = features.final_score
         if score >= 0.74:
-            rec_level = "🟢 STRONG MATCH"
+            rec_level = "STRONG MATCH"
         elif score >= 0.68:
-            rec_level = "🔵 GOOD MATCH"
+            rec_level = "GOOD MATCH"
         elif score >= 0.60:
-            rec_level = "🟡 MARGINAL MATCH"
+            rec_level = "MARGINAL MATCH"
         else:
-            rec_level = "🔴 UNALIGNED"
+            rec_level = "UNALIGNED"
 
         lines = []
         lines.append(f"## Candidate: {candidate.candidate_id}")
@@ -235,11 +235,11 @@ class ExplanationGenerator:
                 concerns.append(f"Work mode mismatch: Candidate prefers **{sig.preferred_work_mode}** but job is **{jd.work_mode}**.")
 
         if strengths:
-            lines.append("#### 👍 Primary Strengths")
+            lines.append("#### Primary Strengths")
             for s in strengths:
                 lines.append(f"- {s}")
         if concerns:
-            lines.append("#### ⚠️ Potential Concerns")
+            lines.append("#### Potential Concerns")
             for c in concerns:
                 lines.append(f"- {c}")
         lines.append("")

@@ -155,7 +155,7 @@ class TestExplanation(unittest.TestCase):
         # Assert all required markdown sections are present
         # in the correct format expected by the frontend renderer.
         self.assertIn("## Candidate: CAND_999", report)
-        self.assertIn("🟢 STRONG MATCH", report)
+        self.assertIn("STRONG MATCH", report)
         self.assertIn("### Key Recruiter Signals", report)
         self.assertIn("### Score Breakdown", report)
         self.assertIn("### Extracted Evidence", report)

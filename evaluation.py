@@ -124,9 +124,9 @@ def run_evaluation():
         f.write("\n")
         
         f.write("## 3. Advanced Features Correctness & Safety Verification\n\n")
-        f.write(f"- **Feature Normalization Bounds Test**: " + ("🟢 PASS" if out_of_bounds_count == 0 else f"🔴 FAIL ({out_of_bounds_count} instances out of bounds)") + "\n")
+        f.write(f"- **Feature Normalization Bounds Test**: " + ("PASS" if out_of_bounds_count == 0 else f"FAIL ({out_of_bounds_count} instances out of bounds)") + "\n")
         f.write("  - *Asserts all computed advanced recruiter feature values strictly lie in the interval `[0.0, 1.0]`.*\n")
-        f.write("- **Null Values Validation**: 🟢 PASS\n")
+        f.write("- **Null Values Validation**: PASS\n")
         f.write("  - *Asserts all score components are populated and free of NaN/Inf values.*\n")
 
     logger.info(f"Evaluation completed successfully. Metrics written to '{report_file}'.")
