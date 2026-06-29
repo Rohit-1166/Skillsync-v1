@@ -339,6 +339,26 @@ def explain_candidate(
         if format == "markdown":
             return PlainTextResponse(report)
 
+        def _get_signals_dict(cand):
+            sig = cand.signals[0] if isinstance(cand.signals, list) and cand.signals else (cand.signals if not isinstance(cand.signals, list) and cand.signals else None)
+            if not sig:
+                return {}
+            return {
+                "notice_period_days": getattr(sig, "notice_period_days", 30),
+                "preferred_work_mode": getattr(sig, "preferred_work_mode", "Hybrid"),
+                "willing_to_relocate": getattr(sig, "willing_to_relocate", False),
+                "profile_completeness_score": getattr(sig, "profile_completeness_score", 0.0),
+                "github_activity_score": getattr(sig, "github_activity_score", 0.0),
+                "recruiter_response_rate": getattr(sig, "recruiter_response_rate", 0.0),
+                "avg_response_time_hours": getattr(sig, "avg_response_time_hours", 24.0),
+                "interview_completion_rate": getattr(sig, "interview_completion_rate", 0.0),
+                "offer_acceptance_rate": getattr(sig, "offer_acceptance_rate", 0.0),
+                "open_to_work_flag": getattr(sig, "open_to_work_flag", False),
+                "verified_email": getattr(sig, "verified_email", False),
+                "verified_phone": getattr(sig, "verified_phone", False),
+                "linkedin_connected": getattr(sig, "linkedin_connected", False)
+            }
+
         # TODO: serialize full candidate profile instead of cherry-picking fields here
         details = {
             "headline": candidate.profile.headline,
@@ -383,21 +403,7 @@ def explain_candidate(
                 for c in candidate.career_history
             ],
 
-            "signals": {
-                "notice_period_days": candidate.signals.notice_period_days,
-                "preferred_work_mode": candidate.signals.preferred_work_mode,
-                "willing_to_relocate": candidate.signals.willing_to_relocate,
-                "profile_completeness_score": candidate.signals.profile_completeness_score,
-                "github_activity_score": candidate.signals.github_activity_score,
-                "recruiter_response_rate": candidate.signals.recruiter_response_rate,
-                "avg_response_time_hours": candidate.signals.avg_response_time_hours,
-                "interview_completion_rate": candidate.signals.interview_completion_rate,
-                "offer_acceptance_rate": candidate.signals.offer_acceptance_rate,
-                "open_to_work_flag": candidate.signals.open_to_work_flag,
-                "verified_email": candidate.signals.verified_email,
-                "verified_phone": candidate.signals.verified_phone,
-                "linkedin_connected": candidate.signals.linkedin_connected
-            }
+            "signals": _get_signals_dict(candidate)
         }
 
         return {

@@ -15,7 +15,25 @@ from utils.logger import logger
 
 
 # TODO: Move JSONL parsing to a separate data loader class later
+
+def safe_float(val, default=0.0):
+    if val is None or val == "": return default
+    try: return float(val)
+    except (ValueError, TypeError): return default
+
+def safe_int(val, default=0):
+    if val is None or val == "": return default
+    try: return int(val)
+    except (ValueError, TypeError): return default
+
+def safe_bool(val, default=False):
+    if val is None or val == "": return default
+    if isinstance(val, str) and val.lower() == 'false': return False
+    try: return bool(val)
+    except (ValueError, TypeError): return default
+
 class CandidateParser:
+
 
     def __init__(self, jsonl_path: Path):
 
@@ -138,12 +156,10 @@ class CandidateParser:
 
             country=profile.get("country", ""),
 
-            years_of_experience=float(
-                profile.get(
+            years_of_experience=safe_float(profile.get(
                     "years_of_experience",
                     0
-                )
-            ),
+                )),
 
             current_title=profile.get(
                 "current_title",
@@ -180,12 +196,10 @@ class CandidateParser:
                         ""
                     ),
 
-                    duration_months=int(
-                        job.get(
+                    duration_months=safe_int(job.get(
                             "duration_months",
                             0
-                        )
-                    ),
+                        )),
 
                     industry=job.get(
                         "industry",
@@ -228,19 +242,15 @@ class CandidateParser:
                         ""
                     ),
 
-                    endorsements=int(
-                        skill.get(
+                    endorsements=safe_int(skill.get(
                             "endorsements",
                             0
-                        )
-                    ),
+                        )),
 
-                    duration_months=int(
-                        skill.get(
+                    duration_months=safe_int(skill.get(
                             "duration_months",
                             0
-                        )
-                    )
+                        ))
                 )
             )
 
@@ -284,9 +294,9 @@ class CandidateParser:
                         ""
                     ),
 
-                    start_year=int(start_y) if start_y is not None else None,
+                    start_year=safe_int(start_y, None),
 
-                    end_year=int(end_y) if end_y is not None else None
+                    end_year=safe_int(end_y, None)
 
                 )
             )
@@ -301,40 +311,40 @@ class CandidateParser:
         )
 
         return RecruiterSignals(
-            profile_completeness_score=float( signal.get("profile_completeness_score", 0) ),
+            profile_completeness_score=safe_float(signal.get("profile_completeness_score", 0)),
             signup_date=signal.get( "signup_date", "" ),
             last_active_date=signal.get( "last_active_date", "" ),
 
-            open_to_work_flag=bool( signal.get("open_to_work_flag", False) ),
+            open_to_work_flag=safe_bool(signal.get("open_to_work_flag", False)),
 
-            profile_views_received_30d=int( signal.get("profile_views_received_30d", 0) ),
-            applications_submitted_30d=int( signal.get("applications_submitted_30d", 0) ),
+            profile_views_received_30d=safe_int(signal.get("profile_views_received_30d", 0)),
+            applications_submitted_30d=safe_int(signal.get("applications_submitted_30d", 0)),
 
-            recruiter_response_rate=float( signal.get("recruiter_response_rate", 0) ),
-            avg_response_time_hours=float( signal.get("avg_response_time_hours", 0) ),
+            recruiter_response_rate=safe_float(signal.get("recruiter_response_rate", 0)),
+            avg_response_time_hours=safe_float(signal.get("avg_response_time_hours", 0)),
 
             skill_assessment_scores=signal.get( "skill_assessment_scores", {} ),
 
-            connection_count=int( signal.get("connection_count", 0) ),
-            endorsements_received=int( signal.get("endorsements_received", 0) ),
+            connection_count=safe_int(signal.get("connection_count", 0)),
+            endorsements_received=safe_int(signal.get("endorsements_received", 0)),
 
-            notice_period_days=int( signal.get("notice_period_days", 0) ),
+            notice_period_days=safe_int(signal.get("notice_period_days", 0)),
 
-            expected_salary_min=float( expected_salary.get("min", 0) ),
-            expected_salary_max=float( expected_salary.get("max", 0) ),
+            expected_salary_min=safe_float(expected_salary.get("min", 0)),
+            expected_salary_max=safe_float(expected_salary.get("max", 0)),
 
             preferred_work_mode=signal.get( "preferred_work_mode", "" ),
-            willing_to_relocate=bool( signal.get("willing_to_relocate", False) ),
+            willing_to_relocate=safe_bool(signal.get("willing_to_relocate", False)),
 
-            github_activity_score=float( signal.get("github_activity_score", -1) ),
+            github_activity_score=safe_float(signal.get("github_activity_score", -1)),
 
-            search_appearance_30d=int( signal.get("search_appearance_30d", 0) ),
-            saved_by_recruiters_30d=int( signal.get("saved_by_recruiters_30d", 0) ),
-            interview_completion_rate=float( signal.get("interview_completion_rate", 0) ),
+            search_appearance_30d=safe_int(signal.get("search_appearance_30d", 0)),
+            saved_by_recruiters_30d=safe_int(signal.get("saved_by_recruiters_30d", 0)),
+            interview_completion_rate=safe_float(signal.get("interview_completion_rate", 0)),
 
-            offer_acceptance_rate=float( signal.get("offer_acceptance_rate", -1) ),
+            offer_acceptance_rate=safe_float(signal.get("offer_acceptance_rate", -1)),
 
-            verified_email=bool( signal.get("verified_email", False) ),
-            verified_phone=bool( signal.get("verified_phone", False) ),
-            linkedin_connected=bool( signal.get("linkedin_connected", False) )
+            verified_email=safe_bool(signal.get("verified_email", False)),
+            verified_phone=safe_bool(signal.get("verified_phone", False)),
+            linkedin_connected=safe_bool(signal.get("linkedin_connected", False))
         )
